@@ -1,0 +1,19 @@
+{
+	"name": "silverstripe/gridfieldqueuedexport",
+	"description": "Export large data sets from your GridField in the SilverStripe CMS interface through async jobs",
+	"type": "silverstripe-module",
+	"keywords": ["silverstripe", "queuedjobs", "export", "csv", "gridfield", "cwp"],
+	"license": "BSD-3-Clause",
+	"minimum-stability": "dev",
+	"require": {
+		"silverstripe/framework": "^3.3"
+	},
+	"extra": 
+	{
+		"branch-alias": 
+		{
+			"dev-master": "1.0.x-dev"
+		}
+	}
+}
+
