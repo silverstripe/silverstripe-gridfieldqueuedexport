@@ -4,7 +4,14 @@
 
 ## Introduction
 
-Allows for large data set exports from a `GridField`.
+Allows for large data set exports from a `GridField`. By using an asynchronous job queue, we avoid
+running out of PHP memory or exceeding any maximum execution time limits.
+
+The exact limitations of a standard `GridField` export vary based on the server configuration, 
+server capacity and the complexity of the exported `DataObject`. 
+As a rough guide, you should consider using this module
+when more than 1000 records need to be exported. The module should be able to export
+10,000 records on a standard server configuration within a few minutes.
 
 ## Requirements
 
