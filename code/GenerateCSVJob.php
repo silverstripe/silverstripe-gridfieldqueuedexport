@@ -75,10 +75,10 @@ class GenerateCSVJob extends AbstractQueuedJob {
         $actionKey = 'action_gridFieldAlterAction?' . http_build_query(['StateID' => $id]);
         $actionValue = 'Find Gridfield';
 
-        $url = $this->GridFieldURL . '?' .http_build_query([
-            $actionKey => $actionValue,
-            'SecurityID' => 1
-        ]);
+        $url = Controller::join_links(
+            $this->GridFieldURL,
+            '?' .http_build_query([$actionKey => $actionValue, 'SecurityID' => 1])
+        );
 
         // Restore into the current session the user the job is exporting as
         Session::set("loggedInAs", $session['loggedInAs']);
