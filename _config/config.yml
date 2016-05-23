@@ -1,5 +1,7 @@
 ---
 Name: gridfieldqueuedexport
+Only:
+  ModuleExists: 'userforms'
 After:
   - 'userforms/*'
 ---
