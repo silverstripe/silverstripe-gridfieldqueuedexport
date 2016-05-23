@@ -1,0 +1,8 @@
+---
+Name: gridfieldqueuedexport
+After:
+  - 'userforms/*'
+---
+UserDefinedForm:
+  extensions:
+    - UserFormUseQueuedExportExtension
