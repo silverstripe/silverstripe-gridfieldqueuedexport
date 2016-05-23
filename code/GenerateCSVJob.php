@@ -67,9 +67,13 @@ class GenerateCSVJob extends AbstractQueuedJob {
         // Ensure $id doesn't contain only numeric characters
         $id = 'gf_' . substr(md5(serialize($state)), 0, 8);
 
+        // Simulate CSRF token use, hardcode to a random value in our fake session
+        // so GridField can evaluate it in the Director::test() execution
+        $token = Injector::inst()->create('RandomGenerator')->randomToken('sha1');
+
         // Add new form action into session for GridField to find when Director::test is called below
         $session[$id] = $state;
-        $session['SecurityID'] = '1';
+        $session['SecurityID'] = $token;
 
         // Construct the URL
         $actionKey = 'action_gridFieldAlterAction?' . http_build_query(['StateID' => $id]);
@@ -77,7 +81,7 @@ class GenerateCSVJob extends AbstractQueuedJob {
 
         $url = Controller::join_links(
             $this->GridFieldURL,
-            '?' .http_build_query([$actionKey => $actionValue, 'SecurityID' => 1])
+            '?' .http_build_query([$actionKey => $actionValue, 'SecurityID' => $token])
         );
 
         // Restore into the current session the user the job is exporting as
