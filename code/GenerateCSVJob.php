@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Iteratively exports GridField data to a CSV file on disk, in order to support large exports.
+ * The generated file can be downloaded by the user through a CMS UI provided in {@link GridFieldQueuedExportButton}.
+ *
+ * Simulates a request to the GridFieldQueuedExportButton controller to retrieve the GridField instance,
+ * from which the original data context can be derived (as an {@link SS_List instance).
+ * This is a necessary workaround due to the limitations on serialising GridField's data description logic.
+ * While a DataList is serialisable, other SS_List instances might not be.
+ * We'd also need to consider custom value transformations applied via GridField->customDataFields lambdas.
+ *
+ * Relies on GridField being accessible in its original CMS controller context to the user
+ * who triggered the export.
+ */
 class GenerateCSVJob extends AbstractQueuedJob {
 
     public function __construct() {
@@ -10,23 +23,38 @@ class GenerateCSVJob extends AbstractQueuedJob {
         $this->totalSteps = 1;
     }
 
+    /**
+     * @return string
+     */
     public function getJobType() {
         return QueuedJob::QUEUED;
     }
 
+    /**
+     * @return string
+     */
     public function getTitle() {
         return "Export a CSV of a Gridfield";
     }
 
+    /**
+     * @return string
+     */
     public function getSignature() {
         return md5(get_class($this) . '-' . $this->ID);
     }
 
-    function setGridField($gridField) {
+    /**
+     * @param GridField $gridField
+     */
+    function setGridField(GridField $gridField) {
         $this->GridFieldName = $gridField->getName();
         $this->GridFieldURL = $gridField->Link();
     }
 
+    /**
+     * @param $session
+     */
     function setSession($session) {
         // None of the gridfield actions are needed, and they make the stored session bigger, so pull
         // them out.
@@ -54,6 +82,10 @@ class GenerateCSVJob extends AbstractQueuedJob {
         $this->IncludeHeader = $includeHeader;
     }
 
+    /**
+     * @return GridField
+     * @throws SS_HTTPResponse_Exception
+     */
     protected function getGridField() {
         $session = $this->Session;
 
@@ -102,6 +134,10 @@ class GenerateCSVJob extends AbstractQueuedJob {
         }
     }
 
+    /**
+     * @param $gridField
+     * @param $columns
+     */
     protected function outputHeader($gridField, $columns) {
         $fileData = '';
         $separator = $this->Separator;
@@ -120,7 +156,15 @@ class GenerateCSVJob extends AbstractQueuedJob {
         file_put_contents('/tmp/' . $this->getSignature() . '.csv', $fileData, FILE_APPEND);
     }
 
-    protected function outputRows($gridField, $columns, $start, $count) {
+    /**
+     * This method is adapted from GridField->generateExportFileData()
+     *
+     * @param GridField $gridField
+     * @param array $columns
+     * @param int $start
+     * @param int $count
+     */
+    protected function outputRows(GridField $gridField, $columns, $start, $count) {
         $fileData = '';
         $separator = $this->Separator;
 
@@ -163,7 +207,6 @@ class GenerateCSVJob extends AbstractQueuedJob {
 
         file_put_contents('/tmp/' . $this->getSignature() . '.csv', $fileData, FILE_APPEND);
     }
-
 
     public function setup() {
         $gridField = $this->getGridField();
