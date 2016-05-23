@@ -86,7 +86,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         singleton('QueuedJobService')->queueJob($job);
 
         // Redirect to the status update page
-        return Controller::curr()->redirect($gridField->Link() . '/export/' . $job->getSignature());
+        return Controller::curr()->redirect($gridField->Link('/export/' . $job->getSignature()));
     }
 
     /**
@@ -124,7 +124,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         ));
 
         if ($job->JobStatus == QueuedJob::STATUS_COMPLETE) {
-            $data->Link = $gridField->Link() . '/export_download/' . $job->Signature;
+            $data->Link = $gridField->Link('/export_download/' . $job->Signature);
         } else if ($job->JobStatus == QueuedJob::STATUS_BROKEN) {
             $data->ErrorMessage = "Sorry, but there was an error exporting the CSV";
         } else if ($job->JobStatus == QueuedJob::STATUS_CANCELLED) {
