@@ -25,6 +25,28 @@
                     }
                 });
             }
-        })
+        });
+
+        $('.gridfield-queued-export__status-available').entwine({
+            onadd: function(){
+                this.checkForDownloadStart();
+            },
+
+            checkForDownloadStart: function(){
+                var self = this;
+                if (!$.contains(document, self[0])) return;
+
+                var id = this.parents('.gridfield-queued-export').attr('data-id');
+                if (!id) return;
+
+                if(document.cookie.match(new RegExp("(^|;\\s*)downloaded_"+id+"\\s*=\\s*true(\\s*;|$)", 'i'))) {
+                    this.replaceWith(
+                        '<p>'+ss.i18n._t('GridFieldQueuedExportButton.DOWNLOADED', 'Your export has been downloaded.')+'</p>'
+                    );
+                }
+
+                setTimeout(function(){ self.checkForDownloadStart(); }, 500);
+            }
+        });
     });
 }(jQuery));
