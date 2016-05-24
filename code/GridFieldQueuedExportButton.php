@@ -50,6 +50,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         $button->setAttribute('data-icon', 'download-csv');
         $button->addExtraClass('action_batch_export');
         $button->setForm($gridField->getForm());
+
         return array(
             $this->targetFragment => '<p class="grid-csv-button">' . $button->Field() . '</p>',
         );
@@ -118,13 +119,14 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         $backlink = array_pop($parents)->Link;
 
         $data = new ArrayData(array(
+            'Link'        => Controller::join_links($gridField->Link(), 'export', $job->Signature),
             'Backlink'    => $backlink,
             'Breadcrumbs' => $breadcrumbs,
             'GridName'    => $gridField->getname()
         ));
 
         if ($job->JobStatus == QueuedJob::STATUS_COMPLETE) {
-            $data->Link = $gridField->Link('/export_download/' . $job->Signature);
+            $data->DownloadLink = $gridField->Link('/export_download/' . $job->Signature);
         } else if ($job->JobStatus == QueuedJob::STATUS_BROKEN) {
             $data->ErrorMessage = "Sorry, but there was an error exporting the CSV";
         } else if ($job->JobStatus == QueuedJob::STATUS_CANCELLED) {
@@ -133,6 +135,9 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
             $data->Count = $job->StepsProcessed;
             $data->Total = $job->TotalSteps;
         }
+
+        Requirements::javascript('gridfieldqueuedexport/client/GridFieldQueuedExportButton.js');
+        Requirements::css('gridfieldqueuedexport/client/GridFieldQueuedExportButton.css');
 
         $return = $data->renderWith('GridFieldQueuedExportButton');
 

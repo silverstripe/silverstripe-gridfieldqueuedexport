@@ -1,4 +1,4 @@
-<div class="cms-content cms-tabset center" data-layout-type="border" data-pjax-fragment="Content">
+<div class="cms-content cms-tabset center gridfield-queued-export" data-layout-type="border" data-pjax-fragment="Content" data-url="$Link">
 
     <div class="cms-content-header north">
         <div class="cms-content-header-info">
@@ -7,10 +7,9 @@
         </div>
     </div>
 
-    <div class="cms-content-fields center ui-widget-content cms-panel-padded" data-layout-type="border">
-        <p>&nbsp;</p>
-        <% if $Link %>
-           <p><%t GridFieldQueuedExportButton.AVAILABLE 'Your export is available.' %> <a href="$Link"><%t GridFieldQueuedExportButton.DOWNLOAD_CSV 'Click here to download file as CSV.' %></a></p>
+    <div class="cms-content-fields center ui-widget-content cms-panel-padded gridfield-queued-export__status" data-layout-type="border">
+        <% if $DownloadLink %>
+           <p><%t GridFieldQueuedExportButton.AVAILABLE 'Your export is available.' %> <a href="$DownloadLink"><%t GridFieldQueuedExportButton.DOWNLOAD_CSV 'Click here to download file as CSV.' %></a></p>
         <% else_if $ErrorMessage %>
            <p>$ErrorMessage.XML</p>
         <% else %>
