@@ -1,0 +1,7 @@
+en:
+  GridFieldQueuedExportButton:
+    AVAILABLE: 'Your export is available.'
+    DOWNLOAD_CSV: 'Click here to download file as CSV.'
+    EXPORTED_COUNT: '{count} out of {total} records exported'
+    PREPARING_EXPORT: 'Preparing export. This page will automatically refresh when export is available. You can bookmark this page and come back later if you like.'
+    RETURN: 'Return to {name}'
