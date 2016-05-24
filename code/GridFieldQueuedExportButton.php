@@ -152,9 +152,15 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         $id = $request->param('ID');
 
         $now = Date("d-m-Y-H-i");
-        $fileName = "export-$now.csv";
+        $servedName = "export-$now.csv";
 
-        return SS_HTTPRequest::send_file(file_get_contents('/tmp/' . $id . '.csv'), $fileName, 'text/csv');
+        $path = ASSETS_PATH."/.exports/$id/$id.csv";
+        $content = file_get_contents($path);
+
+        unlink($path);
+        rmdir(dirname($path));
+
+        return SS_HTTPRequest::send_file($content, $servedName, 'text/csv');
     }
 
     /**
