@@ -1,7 +1,7 @@
 (function($) {
     $.entwine("ss", function($) {
 
-        $('.gridfield-queued-export__status').entwine({
+        $('.gridfield-queued-export__status-pending').entwine({
 
             onadd: function() {
                 var self = this;
@@ -9,7 +9,7 @@
             },
 
             checkStatus: function() {
-                var url = this.parent('.gridfield-queued-export').attr('data-url');
+                var url = this.parents('.gridfield-queued-export').attr('data-url');
                 if (!url) return;
 
                 $('.cms-content-header-info').append('<span class="gridfield-queued-export__loading"></span>');

@@ -13,7 +13,7 @@
         <% else_if $ErrorMessage %>
            <p>$ErrorMessage.XML</p>
         <% else %>
-           <p>
+           <p class="gridfield-queued-export__status-pending">
                <%t GridFieldQueuedExportButton.PREPARING_EXPORT 'Preparing export. This page will automatically refresh when export is available. You can bookmark this page and come back later if you like.' %>
            </p>
            <p><%t GridFieldQueuedExportButton.EXPORTED_COUNT '{count} out of {total} records exported' count=$Count total=$Total %></p>
