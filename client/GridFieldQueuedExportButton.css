@@ -1,0 +1,13 @@
+.gridfield-queued-export__loading {
+	background: url(../../framework/images/network-save.gif) no-repeat;
+	display: block;
+	height: 16px;
+	width: 16px;
+	padding-left: 20px;
+	margin-bottom: 11px;
+	vertical-align: bottom;
+}
+
+.cms .gridfield-queued-export__status {
+	padding-top: 1em;
+}
