@@ -111,7 +111,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
 
         $breadcrumbs = $controller->Breadcrumbs(false);
         $breadcrumbs->push(new ArrayData(array(
-            'Title' => 'Export CSV',
+            'Title' => _t('TableListField.CSVEXPORT', 'Export to CSV'),
             'Link'  => false
         )));
 
@@ -128,9 +128,15 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         if ($job->JobStatus == QueuedJob::STATUS_COMPLETE) {
             $data->DownloadLink = $gridField->Link('/export_download/' . $job->Signature);
         } else if ($job->JobStatus == QueuedJob::STATUS_BROKEN) {
-            $data->ErrorMessage = "Sorry, but there was an error exporting the CSV";
+            $data->ErrorMessage = _t(
+                'GridFieldQueuedExportButton.ERROR_GENERAL',
+                'Sorry, but there was an error exporting the CSV'
+            );
         } else if ($job->JobStatus == QueuedJob::STATUS_CANCELLED) {
-            $data->ErrorMessage = "This export job was cancelled";
+            $data->ErrorMessage = _t(
+                'GridFieldQueuedExportButton.CANCELLED',
+                'This export job was cancelled'
+            );
         } else {
             $data->Count = $job->StepsProcessed;
             $data->Total = $job->TotalSteps;
