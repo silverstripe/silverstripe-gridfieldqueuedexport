@@ -43,7 +43,6 @@ class GenerateCSVJob extends AbstractQueuedJob {
     public function getSignature() {
         return md5(get_class($this) . '-' . $this->ID);
     }
-
     /**
      * @param GridField $gridField
      */
@@ -80,6 +79,22 @@ class GenerateCSVJob extends AbstractQueuedJob {
 
     function setIncludeHeader($includeHeader) {
         $this->IncludeHeader = $includeHeader;
+    }
+
+    protected function getOutputPath() {
+        $base = ASSETS_PATH . '/.exports';
+        if (!is_dir($base)) mkdir($base, 0770, true);
+
+        // Although the string is random, so should be hard to guess, also try and block access directly.
+        // Only works in Apache though
+        if (!file_exists("$base/.htaccess")) {
+            file_put_contents("$base/.htaccess", "Deny from all\nRewriteRule .* - [F]\n");
+        }
+
+        $folder = $base.'/'.$this->getSignature();
+        if (!is_dir($folder)) mkdir($folder, 0770, true);
+
+        return $folder.'/'.$this->getSignature().'.csv';
     }
 
     /**
@@ -153,7 +168,7 @@ class GenerateCSVJob extends AbstractQueuedJob {
         $fileData .= "\"" . implode("\"{$separator}\"", array_values($headers)) . "\"";
         $fileData .= "\n";
 
-        file_put_contents('/tmp/' . $this->getSignature() . '.csv', $fileData, FILE_APPEND);
+        file_put_contents($this->getOutputPath(), $fileData, FILE_APPEND);
     }
 
     /**
@@ -205,7 +220,7 @@ class GenerateCSVJob extends AbstractQueuedJob {
             }
         }
 
-        file_put_contents('/tmp/' . $this->getSignature() . '.csv', $fileData, FILE_APPEND);
+        file_put_contents($this->getOutputPath(), $fileData, FILE_APPEND);
     }
 
     public function setup() {
