@@ -16,7 +16,7 @@
 class GenerateCSVJob extends AbstractQueuedJob {
 
     public function __construct() {
-        $this->ID = uniqid();
+        $this->ID = Injector::inst()->create('RandomGenerator')->randomToken('sha1');
         $this->Seperator = ',';
         $this->IncludeHeader = true;
         $this->HeadersOutput = false;
