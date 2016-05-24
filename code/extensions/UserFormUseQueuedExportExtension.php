@@ -9,6 +9,6 @@ class UserFormUseQueuedExportExtension extends DataExtension {
 
         $config = $gridField->getConfig();
         $config->removeComponentsByType('GridFieldExportButton');
-        $config->addComponent(new GridFieldQueuedExportButton());
+        $config->addComponent(new GridFieldQueuedExportButton('buttons-after-left'));
     }
 }
