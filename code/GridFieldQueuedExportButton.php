@@ -107,6 +107,10 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         $id = $request->param('ID');
         $job = QueuedJobDescriptor::get()->filter('Signature', $id)->first();
 
+        if ($job->RunAsID !== Member::currentUserID()) {
+            return Security::permissionFailure();
+        }
+
         $controller = $gridField->getForm()->getController();
 
         $breadcrumbs = $controller->Breadcrumbs(false);
@@ -156,6 +160,11 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
 
     public function downloadExport($gridField, $request = null) {
         $id = $request->param('ID');
+        $job = QueuedJobDescriptor::get()->filter('Signature', $id)->first();
+
+        if ($job->RunAsID !== Member::currentUserID()) {
+            return Security::permissionFailure();
+        }
 
         $now = Date("d-m-Y-H-i");
         $servedName = "export-$now.csv";
