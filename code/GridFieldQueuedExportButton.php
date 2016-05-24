@@ -100,6 +100,11 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         );
     }
 
+    protected function getExportPath($id) {
+        if ($id instanceof QueuedJobDescriptor) $id = $id->Signature;
+        return ASSETS_PATH."/.exports/$id/$id.csv";
+    }
+
     /**
      * Handle the export, for both the action button and the URL
      */
@@ -119,6 +124,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         $backlink = array_pop($parents)->Link;
 
         $data = new ArrayData(array(
+            'ID'          => $id,
             'Link'        => Controller::join_links($gridField->Link(), 'export', $job->Signature),
             'Backlink'    => $backlink,
             'Breadcrumbs' => $breadcrumbs,
@@ -126,7 +132,15 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         ));
 
         if ($job->JobStatus == QueuedJob::STATUS_COMPLETE) {
-            $data->DownloadLink = $gridField->Link('/export_download/' . $job->Signature);
+            if (file_exists($this->getExportPath($id))) {
+                $data->DownloadLink = $gridField->Link('/export_download/' . $job->Signature);
+            }
+            else {
+                $data->ErrorMessage = _t(
+                    'GridFieldQueuedExportButton.ERROR_REMOVED',
+                    'This export has already been downloaded. For security reasons each export can only be downloaded once.'
+                );
+            }
         } else if ($job->JobStatus == QueuedJob::STATUS_BROKEN) {
             $data->ErrorMessage = _t(
                 'GridFieldQueuedExportButton.ERROR_GENERAL',
@@ -160,13 +174,16 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         $now = Date("d-m-Y-H-i");
         $servedName = "export-$now.csv";
 
-        $path = ASSETS_PATH."/.exports/$id/$id.csv";
+        $path = $this->getExportPath($id);
         $content = file_get_contents($path);
 
         unlink($path);
         rmdir(dirname($path));
 
-        return SS_HTTPRequest::send_file($content, $servedName, 'text/csv');
+        $response = SS_HTTPRequest::send_file($content, $servedName, 'text/csv');
+        $response->addHeader('Set-Cookie', 'downloaded_'.$id.'=true; Path=/');
+
+        return $response;
     }
 
     /**
