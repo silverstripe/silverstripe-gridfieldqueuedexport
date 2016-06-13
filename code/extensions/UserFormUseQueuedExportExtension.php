@@ -8,7 +8,13 @@ class UserFormUseQueuedExportExtension extends DataExtension {
         $gridField = $fields->fieldByName('Root.Submissions.Submissions');
 
         $config = $gridField->getConfig();
+        $oldExportButton = $config->getComponentByType('GridFieldExportButton');
+        $config->addComponent($newExportButton = new GridFieldQueuedExportButton('buttons-after-left'));
+        
+        // Set Header and Export columns on new Export Button
+        $newExportButton->setCsvHasHeader($oldExportButton->getCsvHasHeader()); 
+        $newExportButton->setExportColumns($oldExportButton->getExportColumns());
+        
         $config->removeComponentsByType('GridFieldExportButton');
-        $config->addComponent(new GridFieldQueuedExportButton('buttons-after-left'));
     }
 }
