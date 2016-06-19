@@ -1,6 +1,7 @@
 # GridField Queued Export
 
 [![Build Status](https://travis-ci.org/silverstripe/silverstripe-gridfieldqueuedexport.svg?branch=master)](https://travis-ci.org/silverstripe/silverstripe-gridfieldqueuedexport)
+![helpfulrobot](https://helpfulrobot.io/silverstripe/gridfieldqueuedexport/badge)
 
 ## Introduction
 
