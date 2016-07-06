@@ -236,7 +236,14 @@ class GenerateCSVJob extends AbstractQueuedJob {
      */
     public function process() {
         $gridField = $this->getGridField();
-        $columns = $this->Columns ?: singleton($gridField->getModelClass())->summaryFields();
+        
+        if($this->Columns) {
+            $columns = $this->Columns;
+        } else if($dataCols = $gridField->getConfig()->getComponentByType('GridFieldDataColumns')) {
+            $columns = $dataCols->getDisplayFields($gridField);
+        } else {
+            $columns = singleton($gridField->getModelClass())->summaryFields();
+        }
 
         if ($this->IncludeHeader && !$this->HeadersOutput) {
             $this->outputHeader($gridField, $columns);
