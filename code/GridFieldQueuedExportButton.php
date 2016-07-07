@@ -112,7 +112,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         $id = $request->param('ID');
         $job = QueuedJobDescriptor::get()->filter('Signature', $id)->first();
 
-        if ($job->RunAsID !== Member::currentUserID()) {
+        if ((int) $job->RunAsID !== Member::currentUserID()) {
             return Security::permissionFailure();
         }
 
@@ -176,7 +176,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         $id = $request->param('ID');
         $job = QueuedJobDescriptor::get()->filter('Signature', $id)->first();
 
-        if ($job->RunAsID !== Member::currentUserID()) {
+        if ((int) $job->RunAsID !== Member::currentUserID()) {
             return Security::permissionFailure();
         }
 
