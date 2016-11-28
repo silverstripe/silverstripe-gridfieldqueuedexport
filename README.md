@@ -26,3 +26,11 @@ when more than 1000 records need to be exported. The module should be able to ex
 ## Configuration
 
 TODO
+
+Note: This module is preconfigured to work with the
+[silverstripe/userforms](http://github.com/silverstripe/silverstripe-userforms)
+submission CSV export.
+
+## Related
+
+ * [silverstripe/queuedjobcsvexport](https://github.com/open-sausages/queuedjobcsvexport): General purpose CSV exports through queuedjobs (without a dependency on GridField)
