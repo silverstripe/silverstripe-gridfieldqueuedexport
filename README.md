@@ -25,7 +25,33 @@ when more than 1000 records need to be exported. The module should be able to ex
 
 ## Configuration
 
-TODO
+Since this component operates on a `GridField`, you can simply use it's `addComponent()` API.
+
+```php
+$gridField = new GridField('Pages', 'All pages', SiteTree::get())
+$config = $gridField->getConfig();
+$config->addComponent(new GridFieldQueuedExportButton('buttons-after-left'));
+```
+
+If you want to replace the `GridFieldExportButton` created by the default GridField configuration,
+you also need to call `removeComponentsByType()`.
+
+```php
+// Find GridField
+$gridField = $fields->fieldByName('MyGridField');
+$config = $gridField->getConfig();
+
+// Add new component
+$oldExportButton = $config->getComponentByType('GridFieldExportButton');
+$config->addComponent($newExportButton = new GridFieldQueuedExportButton('buttons-after-left'));
+
+// Set Header and Export columns on new Export Button
+$newExportButton->setCsvHasHeader($oldExportButton->getCsvHasHeader()); 
+$newExportButton->setExportColumns($oldExportButton->getExportColumns());
+
+// Remove original component
+$config->removeComponentsByType('GridFieldExportButton');
+```
 
 Note: This module is preconfigured to work with the
 [silverstripe/userforms](http://github.com/silverstripe/silverstripe-userforms)
