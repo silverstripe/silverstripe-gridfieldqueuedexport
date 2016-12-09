@@ -80,6 +80,10 @@ class GenerateCSVJobTest_Record extends DataObject implements TestOnly {
         'PublishOn',
     );
 
+    private static $default_sort = array(
+        'Title',
+    );
+
     private static $db = array(
         'Title' => 'Varchar',
         'Content' => 'Varchar',
