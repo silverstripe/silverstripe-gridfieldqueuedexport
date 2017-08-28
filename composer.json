@@ -7,7 +7,7 @@
 	"minimum-stability": "dev",
 	"require": {
 		"silverstripe/framework": "^3.3",
-        "silverstripe/queuedjobs": "^2.8"
+        "symbiote/silverstripe-queuedjobs": "^3"
 	},
 	"extra":
 	{
