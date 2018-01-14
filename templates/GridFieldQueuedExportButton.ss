@@ -10,8 +10,8 @@
     <div class="cms-content-fields center ui-widget-content cms-panel-padded gridfield-queued-export__status" data-layout-type="border">
         <% if $DownloadLink %>
            <p class="gridfield-queued-export__status-available">
-               <%t GridFieldQueuedExportButton.AVAILABLE 'Your export is available.' %>
-               <a href="$DownloadLink"><%t GridFieldQueuedExportButton.DOWNLOAD_CSV 'Click here to download file as CSV.' %></a>
+               <%t SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.AVAILABLE 'Your export is available.' %>
+               <a href="$DownloadLink"><%t SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.DOWNLOAD_CSV 'Click here to download file as CSV.' %></a>
            </p>
         <% else_if $ErrorMessage %>
             <p class="gridfield-queued-export__status-error">
@@ -19,11 +19,11 @@
             </p>
         <% else %>
            <p class="gridfield-queued-export__status-pending">
-               <%t GridFieldQueuedExportButton.PREPARING_EXPORT 'Preparing export. This page will automatically refresh when export is available. You can bookmark this page and come back later if you like.' %>
+               <%t SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.PREPARING_EXPORT 'Preparing export. This page will automatically refresh when export is available. You can bookmark this page and come back later if you like.' %>
            </p>
-           <p><%t GridFieldQueuedExportButton.EXPORTED_COUNT '{count} out of {total} records exported' count=$Count total=$Total %></p>
+           <p><%t SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.EXPORTED_COUNT '{count} out of {total} records exported' count=$Count total=$Total %></p>
         <% end_if %>
-       <p><a href="$Backlink.ATT"><%t GridFieldQueuedExportButton.RETURN 'Return to {name}' name=$GridName %></a></p>
+       <p><a href="$Backlink.ATT"><%t SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.RETURN 'Return to {name}' name=$GridName %></a></p>
     </div>
 
 </div>

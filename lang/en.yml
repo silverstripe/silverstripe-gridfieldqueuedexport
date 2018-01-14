@@ -1,5 +1,5 @@
 en:
-  GridFieldQueuedExportButton:
+  SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton:
     AVAILABLE: 'Your export is available.'
     CANCELLED: 'This export job was cancelled'
     DOWNLOAD_CSV: 'Click here to download file as CSV.'

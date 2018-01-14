@@ -63,7 +63,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         $button = new GridField_FormAction(
             $gridField,
             'export',
-            _t('TableListField.CSVEXPORT', 'Export to CSV'),
+            _t('SilverStripe\\Forms\\GridField\\GridField.CSVEXPORT', 'Export to CSV'),
             'export',
             null
         );
@@ -150,7 +150,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
 
         $breadcrumbs = $controller->Breadcrumbs(false);
         $breadcrumbs->push(new ArrayData(array(
-            'Title' => _t('TableListField.CSVEXPORT', 'Export to CSV'),
+            'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.CSVEXPORT', 'Export to CSV'),
             'Link' => false
         )));
 
@@ -170,19 +170,19 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
                 $data->DownloadLink = $gridField->Link('/export_download/' . $job->Signature);
             } else {
                 $data->ErrorMessage = _t(
-                    'GridFieldQueuedExportButton.ERROR_REMOVED',
+                    'SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.ERROR_REMOVED',
                     'This export has already been downloaded. ' .
                     'For security reasons each export can only be downloaded once.'
                 );
             }
         } elseif ($job->JobStatus == QueuedJob::STATUS_BROKEN) {
             $data->ErrorMessage = _t(
-                'GridFieldQueuedExportButton.ERROR_GENERAL',
+                'SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.ERROR_GENERAL',
                 'Sorry, but there was an error exporting the CSV'
             );
         } elseif ($job->JobStatus == QueuedJob::STATUS_CANCELLED) {
             $data->ErrorMessage = _t(
-                'GridFieldQueuedExportButton.CANCELLED',
+                'SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.CANCELLED',
                 'This export job was cancelled'
             );
         } else {
@@ -280,5 +280,3 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         return $this;
     }
 }
-
-
