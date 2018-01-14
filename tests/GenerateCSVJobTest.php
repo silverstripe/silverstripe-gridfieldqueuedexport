@@ -1,28 +1,40 @@
 <?php
 
-class GenerateCSVJobTest extends SapphireTest {
+namespace SilverStripe\GridfieldQueuedExport;
+
+use SilverStripe\Assets\Filesystem;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\GridField\GridField;
+
+class GenerateCSVJobTest extends SapphireTest
+{
 
     protected static $fixture_file = 'GenerateCSVJobTest.yml';
 
-    protected $extraDataObjects = array('GenerateCSVJobTest_Record');
+    protected $extraDataObjects = array(GenerateCSVJobTest_Record::class);
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
-        Config::inst()->update('Director', 'rules', array(
-            'jobtest//$Action/$ID/$OtherID' => 'GenerateCSVJobTest_Controller'
+        Config::inst()->update(Director::class, 'rules', array(
+            'jobtest//$Action/$ID/$OtherID' => GenerateCSVJobTest_Controller::class
         ));
     }
 
     protected $paths = array();
 
-    public function tearDown() {
-        foreach($this->paths as $path) {
+    public function tearDown()
+    {
+        foreach ($this->paths as $path) {
             Filesystem::removeFolder(dirname($path));
         }
         parent::tearDown();
     }
 
-    public function testGenerateExport() {
+    public function testGenerateExport()
+    {
         // Build session
         $memberID = $this->logInWithPermission('ADMIN');
         $session = array('loggedInAs' => $memberID);
@@ -61,7 +73,8 @@ EOS;
      * @param array $session
      * @return GenerateCSVJob
      */
-    protected function createJob($gridField, $session) {
+    protected function createJob($gridField, $session)
+    {
         $job = new GenerateCSVJob();
         $job->setGridField($gridField);
         $job->setSession($session);
@@ -71,42 +84,3 @@ EOS;
     }
 }
 
-
-class GenerateCSVJobTest_Record extends DataObject implements TestOnly {
-
-    private static $summary_fields = array(
-        'Title',
-        'Content',
-        'PublishOn',
-    );
-
-    private static $default_sort = array(
-        'Title',
-    );
-
-    private static $db = array(
-        'Title' => 'Varchar',
-        'Content' => 'Varchar',
-        'PublishOn' => 'SS_DateTime'
-    );
-}
-
-class GenerateCSVJobTest_Controller extends Controller implements TestOnly {
-    private static $allowed_actions = array('Form');
-
-    public function Link() {
-        return 'jobtest/';
-    }
-
-    public function Form() {
-        // Get records
-        $records = GenerateCSVJobTest_Record::get();
-
-        // Set config
-        $config = GridFieldConfig_RecordEditor::create();
-        $config->removeComponentsByType('GridFieldExportButton');
-        $config->addComponent(new GridFieldQueuedExportButton('buttons-after-left'));
-        $fields = new GridField('MyGridfield', 'My Records', $records, $config);
-        return new Form($this, 'Form', new FieldList($fields), new FieldList());
-    }
-}

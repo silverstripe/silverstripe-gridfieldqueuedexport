@@ -1,5 +1,19 @@
 <?php
 
+namespace SilverStripe\GridfieldQueuedExport;
+
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Session;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldPageCount;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\Security\RandomGenerator;
+use Symbiote\QueuedJobs\Services\AbstractQueuedJob;
+use Symbiote\QueuedJobs\Services\QueuedJob;
+
 /**
  * Iteratively exports GridField data to a CSV file on disk, in order to support large exports.
  * The generated file can be downloaded by the user through a CMS UI provided in {@link GridFieldQueuedExportButton}.
@@ -13,10 +27,12 @@
  * Relies on GridField being accessible in its original CMS controller context to the user
  * who triggered the export.
  */
-class GenerateCSVJob extends AbstractQueuedJob {
+class GenerateCSVJob extends AbstractQueuedJob
+{
 
-    public function __construct() {
-        $this->ID = Injector::inst()->create('RandomGenerator')->randomToken('sha1');
+    public function __construct()
+    {
+        $this->ID = Injector::inst()->create(RandomGenerator::class)->randomToken('sha1');
         $this->Seperator = ',';
         $this->IncludeHeader = true;
         $this->HeadersOutput = false;
@@ -26,27 +42,32 @@ class GenerateCSVJob extends AbstractQueuedJob {
     /**
      * @return string
      */
-    public function getJobType() {
+    public function getJobType()
+    {
         return QueuedJob::QUEUED;
     }
 
     /**
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return "Export a CSV of a Gridfield";
     }
 
     /**
      * @return string
      */
-    public function getSignature() {
+    public function getSignature()
+    {
         return md5(get_class($this) . '-' . $this->ID);
     }
+
     /**
      * @param GridField $gridField
      */
-    function setGridField(GridField $gridField) {
+    function setGridField(GridField $gridField)
+    {
         $this->GridFieldName = $gridField->getName();
         $this->GridFieldURL = $gridField->Link();
     }
@@ -54,7 +75,8 @@ class GenerateCSVJob extends AbstractQueuedJob {
     /**
      * @param $session
      */
-    function setSession($session) {
+    function setSession($session)
+    {
         // None of the gridfield actions are needed, and they make the stored session bigger, so pull
         // them out.
         $actionkeys = array_filter(array_keys($session), function ($i) {
@@ -69,21 +91,27 @@ class GenerateCSVJob extends AbstractQueuedJob {
         $this->Session = $session;
     }
 
-    function setColumns($columns) {
+    function setColumns($columns)
+    {
         $this->Columns = $columns;
     }
 
-    function setSeparator($seperator) {
+    function setSeparator($seperator)
+    {
         $this->Separator = $seperator;
     }
 
-    function setIncludeHeader($includeHeader) {
+    function setIncludeHeader($includeHeader)
+    {
         $this->IncludeHeader = $includeHeader;
     }
 
-    protected function getOutputPath() {
+    protected function getOutputPath()
+    {
         $base = ASSETS_PATH . '/.exports';
-        if (!is_dir($base)) mkdir($base, 0770, true);
+        if (!is_dir($base)) {
+            mkdir($base, 0770, true);
+        }
 
         // Although the string is random, so should be hard to guess, also try and block access directly.
         // Only works in Apache though
@@ -91,24 +119,27 @@ class GenerateCSVJob extends AbstractQueuedJob {
             file_put_contents("$base/.htaccess", "Deny from all\nRewriteRule .* - [F]\n");
         }
 
-        $folder = $base.'/'.$this->getSignature();
-        if (!is_dir($folder)) mkdir($folder, 0770, true);
+        $folder = $base . '/' . $this->getSignature();
+        if (!is_dir($folder)) {
+            mkdir($folder, 0770, true);
+        }
 
-        return $folder.'/'.$this->getSignature().'.csv';
+        return $folder . '/' . $this->getSignature() . '.csv';
     }
 
     /**
      * @return GridField
      * @throws SS_HTTPResponse_Exception
      */
-    protected function getGridField() {
+    protected function getGridField()
+    {
         $session = $this->Session;
 
         // Store state in session, and pass ID to client side.
         $state = array(
-            'grid'       => $this->GridFieldName,
+            'grid' => $this->GridFieldName,
             'actionName' => 'findgridfield',
-            'args'       => null
+            'args' => null
         );
 
         // Ensure $id doesn't contain only numeric characters
@@ -116,7 +147,7 @@ class GenerateCSVJob extends AbstractQueuedJob {
 
         // Simulate CSRF token use, hardcode to a random value in our fake session
         // so GridField can evaluate it in the Director::test() execution
-        $token = Injector::inst()->create('RandomGenerator')->randomToken('sha1');
+        $token = Injector::inst()->create(RandomGenerator::class)->randomToken('sha1');
 
         // Add new form action into session for GridField to find when Director::test is called below
         $session[$id] = $state;
@@ -128,7 +159,7 @@ class GenerateCSVJob extends AbstractQueuedJob {
 
         $url = Controller::join_links(
             $this->GridFieldURL,
-            '?' .http_build_query([$actionKey => $actionValue, 'SecurityID' => $token])
+            '?' . http_build_query([$actionKey => $actionValue, 'SecurityID' => $token])
         );
 
         // Restore into the current session the user the job is exporting as
@@ -140,8 +171,8 @@ class GenerateCSVJob extends AbstractQueuedJob {
         // Great, it did, we can return it
         if ($res instanceof GridFieldQueuedExportButton_Response) {
             $gridField = $res->getGridField();
-            $gridField->getConfig()->removeComponentsByType('GridFieldPaginator');
-            $gridField->getConfig()->removeComponentsByType('GridFieldPageCount');
+            $gridField->getConfig()->removeComponentsByType(GridFieldPaginator::class);
+            $gridField->getConfig()->removeComponentsByType(GridFieldPageCount::class);
 
             return $gridField;
         } else {
@@ -153,7 +184,8 @@ class GenerateCSVJob extends AbstractQueuedJob {
      * @param $gridField
      * @param $columns
      */
-    protected function outputHeader($gridField, $columns) {
+    protected function outputHeader($gridField, $columns)
+    {
         $fileData = '';
         $separator = $this->Separator;
 
@@ -179,7 +211,8 @@ class GenerateCSVJob extends AbstractQueuedJob {
      * @param int $start
      * @param int $count
      */
-    protected function outputRows(GridField $gridField, $columns, $start, $count) {
+    protected function outputRows(GridField $gridField, $columns, $start, $count)
+    {
         $fileData = '';
         $separator = $this->Separator;
 
@@ -223,7 +256,8 @@ class GenerateCSVJob extends AbstractQueuedJob {
         file_put_contents($this->getOutputPath(), $fileData, FILE_APPEND);
     }
 
-    public function setup() {
+    public function setup()
+    {
         $gridField = $this->getGridField();
         $this->totalSteps = $gridField->getManipulatedList()->count();
     }
@@ -231,15 +265,15 @@ class GenerateCSVJob extends AbstractQueuedJob {
     /**
      * Generate export fields for CSV.
      *
-     * @param GridField $gridField
      * @return array
      */
-    public function process() {
+    public function process()
+    {
         $gridField = $this->getGridField();
-        
-        if($this->Columns) {
+
+        if ($this->Columns) {
             $columns = $this->Columns;
-        } else if($dataCols = $gridField->getConfig()->getComponentByType('GridFieldDataColumns')) {
+        } elseif ($dataCols = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class)) {
             $columns = $dataCols->getDisplayFields($gridField);
         } else {
             $columns = singleton($gridField->getModelClass())->summaryFields();
