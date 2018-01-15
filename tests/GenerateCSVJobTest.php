@@ -14,19 +14,22 @@ class GenerateCSVJobTest extends SapphireTest
 
     protected static $fixture_file = 'GenerateCSVJobTest.yml';
 
-    protected $extraDataObjects = array(GenerateCSVJobTestRecord::class);
+    protected static $extra_dataobjects = [GenerateCSVJobTestRecord::class];
 
-    public function setUp()
+    protected static $extra_controllers = [GenerateCSVJobTestController::class];
+
+    protected function setUp()
     {
         parent::setUp();
-        Config::inst()->update(Director::class, 'rules', array(
+
+        Config::modify()->merge(Director::class, 'rules', [
             'jobtest//$Action/$ID/$OtherID' => GenerateCSVJobTestController::class
-        ));
+        ]);
     }
 
-    protected $paths = array();
+    protected $paths = [];
 
-    public function tearDown()
+    protected function tearDown()
     {
         foreach ($this->paths as $path) {
             Filesystem::removeFolder(dirname($path));
@@ -38,7 +41,7 @@ class GenerateCSVJobTest extends SapphireTest
     {
         // Build session
         $memberID = $this->logInWithPermission('ADMIN');
-        $session = array('loggedInAs' => $memberID);
+        $session = ['loggedInAs' => $memberID];
 
         // Build controller
         $controller = new GenerateCSVJobTestController();

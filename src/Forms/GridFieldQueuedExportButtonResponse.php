@@ -11,7 +11,10 @@ use SilverStripe\Control\HTTPResponse;
  */
 class GridFieldQueuedExportButtonResponse extends HTTPResponse
 {
-    private $gridField;
+    /**
+     * @var GridField
+     */
+    protected $gridField;
 
     public function __construct(GridField $gridField)
     {

@@ -9,18 +9,23 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
-
 use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton;
 
 class GenerateCSVJobTestController extends Controller implements TestOnly
 {
-    private static $allowed_actions = array('Form');
+    private static $allowed_actions = ['Form'];
 
-    public function Link()
+    /**
+     * @return string
+     */
+    public function Link($action = null)
     {
         return 'jobtest/';
     }
 
+    /**
+     * @return Form
+     */
     public function Form()
     {
         // Get records
@@ -31,6 +36,7 @@ class GenerateCSVJobTestController extends Controller implements TestOnly
         $config->removeComponentsByType(GridFieldExportButton::class);
         $config->addComponent(new GridFieldQueuedExportButton('buttons-after-left'));
         $fields = new GridField('MyGridfield', 'My Records', $records, $config);
-        return new Form($this, Form::class, new FieldList($fields), new FieldList());
+        /** @skipUpgrade */
+        return Form::create($this, 'Form', new FieldList($fields), new FieldList());
     }
 }

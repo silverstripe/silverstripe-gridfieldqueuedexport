@@ -1,4 +1,4 @@
-GenerateCSVJobTest_Record:
+SilverStripe\GridFieldQueuedExport\Tests\GenerateCSVJobTestRecord:
   record1:
     Title: 'Record 1'
     Content: '<p>"Record 1" Body</p>'

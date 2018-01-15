@@ -4,6 +4,8 @@ namespace SilverStripe\GridfieldQueuedExport\Jobs;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
@@ -31,6 +33,10 @@ use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButtonResponse
  */
 class GenerateCSVJob extends AbstractQueuedJob
 {
+    /**
+     * @var array
+     */
+    protected $session;
 
     public function __construct()
     {
@@ -75,7 +81,8 @@ class GenerateCSVJob extends AbstractQueuedJob
     }
 
     /**
-     * @param $session
+     * @param array $session
+     * @return $this
      */
     public function setSession($session)
     {
@@ -90,7 +97,14 @@ class GenerateCSVJob extends AbstractQueuedJob
         // This causes problems with logins
         unset($session['HTTP_USER_AGENT']);
 
-        $this->Session = $session;
+        $this->session = $session;
+
+        return $this;
+    }
+
+    public function getSession()
+    {
+        return $this->session;
     }
 
     public function setColumns($columns)
@@ -129,20 +143,22 @@ class GenerateCSVJob extends AbstractQueuedJob
         return $folder . '/' . $this->getSignature() . '.csv';
     }
 
+
     /**
+     * @throws HTTPResponse_Exception
      * @return GridField
-     * @throws SS_HTTPResponse_Exception
      */
     protected function getGridField()
     {
-        $session = $this->Session;
+        /** @var array $session */
+        $session = $this->getSession();
 
         // Store state in session, and pass ID to client side.
-        $state = array(
+        $state = [
             'grid' => $this->GridFieldName,
             'actionName' => 'findgridfield',
             'args' => null
-        );
+        ];
 
         // Ensure $id doesn't contain only numeric characters
         $id = 'gf_' . substr(md5(serialize($state)), 0, 8);
@@ -165,7 +181,7 @@ class GenerateCSVJob extends AbstractQueuedJob
         );
 
         // Restore into the current session the user the job is exporting as
-        Session::set("loggedInAs", $session['loggedInAs']);
+        Injector::inst()->get(HTTPRequest::class)->getSession()->set("loggedInAs", $session['loggedInAs']);
 
         // Then make a sub-query that should return a special SS_HTTPResponse with the gridfield object
         $res = Director::test($url, null, new Session($session), 'GET');
@@ -191,7 +207,7 @@ class GenerateCSVJob extends AbstractQueuedJob
         $fileData = '';
         $separator = $this->Separator;
 
-        $headers = array();
+        $headers = [];
 
         // determine the CSV headers. If a field is callable (e.g. anonymous function) then use the
         // source name as the header instead
@@ -223,7 +239,7 @@ class GenerateCSVJob extends AbstractQueuedJob
 
         foreach ($items as $item) {
             if (!$item->hasMethod('canView') || $item->canView()) {
-                $columnData = array();
+                $columnData = [];
 
                 foreach ($columns as $columnSource => $columnHeader) {
                     if (!is_string($columnHeader) && is_callable($columnHeader)) {
@@ -242,7 +258,7 @@ class GenerateCSVJob extends AbstractQueuedJob
                         }
                     }
 
-                    $value = str_replace(array("\r", "\n"), "\n", $value);
+                    $value = str_replace(["\r", "\n"], "\n", $value);
                     $columnData[] = '"' . str_replace('"', '""', $value) . '"';
                 }
 
@@ -264,10 +280,9 @@ class GenerateCSVJob extends AbstractQueuedJob
         $this->totalSteps = $gridField->getManipulatedList()->count();
     }
 
+
     /**
      * Generate export fields for CSV.
-     *
-     * @return array
      */
     public function process()
     {

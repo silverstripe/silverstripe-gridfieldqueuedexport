@@ -2,8 +2,8 @@
 
     <div class="cms-content-header north">
         <div class="cms-content-header-info">
-            <% include BackLink_Button %>
-            <% include CMSBreadcrumbs %>
+            <% include SilverStripe\\Admin\\BackLink_Button %>
+            <% include SilverStripe\\Admin\\CMSBreadcrumbs %>
         </div>
     </div>
 
@@ -25,5 +25,5 @@
         <% end_if %>
        <p><a href="$Backlink.ATT"><%t SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.RETURN 'Return to {name}' name=$GridName %></a></p>
     </div>
-
+    <p>Hello world</p>
 </div>

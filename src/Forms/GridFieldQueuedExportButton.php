@@ -4,6 +4,8 @@ namespace SilverStripe\GridfieldQueuedExport\Forms;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_FormAction;
@@ -60,7 +62,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
      */
     public function getHTMLFragments($gridField)
     {
-        $button = new GridField_FormAction(
+        $button = GridField_FormAction::create(
             $gridField,
             'export',
             _t('SilverStripe\\Forms\\GridField\\GridField.CSVEXPORT', 'Export to CSV'),
@@ -68,22 +70,32 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
             null
         );
         $button->setAttribute('data-icon', 'download-csv');
-        $button->addExtraClass('action_batch_export');
+        $button->addExtraClass('btn btn-secondary no-ajax font-icon-down-circled action_export action_batch_export');
         $button->setForm($gridField->getForm());
 
-        return array(
+        return [
             $this->targetFragment => '<p class="grid-csv-button">' . $button->Field() . '</p>',
-        );
+        ];
     }
+
 
     /**
      * This class is an action button
+     *
+     * @param $gridField
+     * @return array
      */
     public function getActions($gridField)
     {
         return array('export', 'findgridfield');
     }
 
+    /**
+     * @param GridField $gridField
+     * @param string $actionName
+     * @param array $arguments
+     * @param array $data
+     */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
         if ($actionName == 'export') {
@@ -93,13 +105,17 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         }
     }
 
+    /**
+     * @param $gridField
+     * @return HTTPResponse
+     */
     public function startExport($gridField)
     {
         $job = new GenerateCSVJob();
 
         // Set the parameters that allow re-discovering this gridfield during background execution
         $job->setGridField($gridField);
-        $job->setSession(Controller::curr()->getSession()->get_all());
+        $job->setSession(Injector::inst()->get(HTTPRequest::class)->getSession()->getAll());
 
         // Set the parameters that control CSV exporting
         $job->setSeparator($this->csvSeparator);
@@ -115,15 +131,19 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         return Controller::curr()->redirect($gridField->Link('/export/' . $job->getSignature()));
     }
 
+
     /**
      * This class is also a URL handler
+     *
+     * @param GridField $gridField
+     * @return array
      */
     public function getURLHandlers($gridField)
     {
-        return array(
+        return [
             'export/$ID' => 'checkExport',
             'export_download/$ID' => 'downloadExport'
-        );
+        ];
     }
 
     protected function getExportPath($id)
@@ -134,36 +154,41 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         return ASSETS_PATH . "/.exports/$id/$id.csv";
     }
 
+
     /**
      * Handle the export, for both the action button and the URL
+     *
+     * @param $gridField
+     * @param null $request
+     * @return \SilverStripe\Control\HTTPResponse|\SilverStripe\ORM\FieldType\DBHTMLText
      */
     public function checkExport($gridField, $request = null)
     {
         $id = $request->param('ID');
         $job = QueuedJobDescriptor::get()->filter('Signature', $id)->first();
 
-        if ((int)$job->RunAsID !== Security::getCurrentUser()) {
+        if ((int)$job->RunAsID !== Security::getCurrentUser()->ID) {
             return Security::permissionFailure();
         }
 
         $controller = $gridField->getForm()->getController();
 
         $breadcrumbs = $controller->Breadcrumbs(false);
-        $breadcrumbs->push(new ArrayData(array(
+        $breadcrumbs->push(new ArrayData([
             'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.CSVEXPORT', 'Export to CSV'),
             'Link' => false
-        )));
+        ]));
 
         $parents = $controller->Breadcrumbs(false)->items;
         $backlink = array_pop($parents)->Link;
 
-        $data = new ArrayData(array(
+        $data = new ArrayData([
             'ID' => $id,
             'Link' => Controller::join_links($gridField->Link(), 'export', $job->Signature),
             'Backlink' => $backlink,
             'Breadcrumbs' => $breadcrumbs,
             'GridName' => $gridField->getname()
-        ));
+        ]);
 
         if ($job->JobStatus == QueuedJob::STATUS_COMPLETE) {
             if (file_exists($this->getExportPath($id))) {
@@ -198,10 +223,15 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         if ($request->isAjax()) {
             return $return;
         } else {
-            return $controller->customise(array('Content' => $return));
+            return $controller->customise(['Content' => $return]);
         }
     }
 
+    /**
+     * @param $gridField
+     * @param null $request
+     * @return HTTPResponse
+     */
     public function downloadExport($gridField, $request = null)
     {
         $id = $request->param('ID');

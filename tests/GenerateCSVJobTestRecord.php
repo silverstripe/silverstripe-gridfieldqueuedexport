@@ -7,19 +7,21 @@ use SilverStripe\ORM\DataObject;
 
 class GenerateCSVJobTestRecord extends DataObject implements TestOnly
 {
-    private static $summary_fields = array(
+    private static $table_name = 'GenerateCSVJobTestRecord';
+
+    private static $summary_fields = [
         'Title',
         'Content',
         'PublishOn',
-    );
+    ];
 
-    private static $default_sort = array(
+    private static $default_sort = [
         'Title',
-    );
+    ];
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar',
         'Content' => 'Varchar',
-        'PublishOn' => 'SS_DateTime'
-    );
+        'PublishOn' => 'Datetime'
+    ];
 }

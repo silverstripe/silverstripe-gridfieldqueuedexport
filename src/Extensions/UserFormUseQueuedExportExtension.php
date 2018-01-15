@@ -4,7 +4,7 @@ namespace SilverStripe\GridfieldQueuedExport\Extensions;
 
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
-use SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton;
+use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton;
 use SilverStripe\ORM\DataExtension;
 
 /**
