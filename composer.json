@@ -9,12 +9,6 @@
 		"silverstripe/framework": "^3.3",
         "silverstripe/queuedjobs": "^2.8"
 	},
-	"extra":
-	{
-		"branch-alias":
-		{
-			"dev-master": "1.0.x-dev"
-		}
-	}
+	"extra": []
 }
 
