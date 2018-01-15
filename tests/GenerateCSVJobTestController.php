@@ -1,7 +1,6 @@
 <?php
 
-namespace SilverStripe\GridfieldQueuedExport;
-
+namespace SilverStripe\GridFieldQueuedExport\Tests;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Dev\TestOnly;
@@ -11,12 +10,9 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 
-use SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton;
+use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton;
 
-
-
-
-class GenerateCSVJobTest_Controller extends Controller implements TestOnly
+class GenerateCSVJobTestController extends Controller implements TestOnly
 {
     private static $allowed_actions = array('Form');
 
@@ -28,7 +24,7 @@ class GenerateCSVJobTest_Controller extends Controller implements TestOnly
     public function Form()
     {
         // Get records
-        $records = GenerateCSVJobTest_Record::get();
+        $records = GenerateCSVJobTestRecord::get();
 
         // Set config
         $config = GridFieldConfig_RecordEditor::create();

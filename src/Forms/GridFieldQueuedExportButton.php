@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\GridfieldQueuedExport;
+namespace SilverStripe\GridfieldQueuedExport\Forms;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
@@ -9,13 +9,13 @@ use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_URLHandler;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Symbiote\QueuedJobs\DataObjects\QueuedJobDescriptor;
 use Symbiote\QueuedJobs\Services\QueuedJob;
 use Symbiote\QueuedJobs\Services\QueuedJobService;
+use SilverStripe\GridfieldQueuedExport\Jobs\GenerateCSVJob;
 
 /**
  * A button you can add to a GridField to export that GridField as a CSV. Should work with any sized GridField,
@@ -89,11 +89,11 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         if ($actionName == 'export') {
             return $this->startExport($gridField);
         } elseif ($actionName == 'findgridfield') {
-            return new GridFieldQueuedExportButton_Response($gridField);
+            return new GridFieldQueuedExportButtonResponse($gridField);
         }
     }
 
-    function startExport($gridField)
+    public function startExport($gridField)
     {
         $job = new GenerateCSVJob();
 

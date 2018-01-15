@@ -1,25 +1,26 @@
 <?php
 
-namespace SilverStripe\GridfieldQueuedExport;
+namespace SilverStripe\GridFieldQueuedExport\Tests;
 
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\GridfieldQueuedExport\Jobs\GenerateCSVJob;
 
 class GenerateCSVJobTest extends SapphireTest
 {
 
     protected static $fixture_file = 'GenerateCSVJobTest.yml';
 
-    protected $extraDataObjects = array(GenerateCSVJobTest_Record::class);
+    protected $extraDataObjects = array(GenerateCSVJobTestRecord::class);
 
     public function setUp()
     {
         parent::setUp();
         Config::inst()->update(Director::class, 'rules', array(
-            'jobtest//$Action/$ID/$OtherID' => GenerateCSVJobTest_Controller::class
+            'jobtest//$Action/$ID/$OtherID' => GenerateCSVJobTestController::class
         ));
     }
 
@@ -40,7 +41,7 @@ class GenerateCSVJobTest extends SapphireTest
         $session = array('loggedInAs' => $memberID);
 
         // Build controller
-        $controller = new GenerateCSVJobTest_Controller();
+        $controller = new GenerateCSVJobTestController();
         $form = $controller->Form();
         $gridfield = $form->Fields()->fieldByName('MyGridfield');
 
@@ -83,4 +84,3 @@ EOS;
         return $job;
     }
 }
-

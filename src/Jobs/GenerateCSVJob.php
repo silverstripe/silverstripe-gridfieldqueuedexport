@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\GridfieldQueuedExport;
+namespace SilverStripe\GridfieldQueuedExport\Jobs;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -13,6 +13,8 @@ use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Security\RandomGenerator;
 use Symbiote\QueuedJobs\Services\AbstractQueuedJob;
 use Symbiote\QueuedJobs\Services\QueuedJob;
+
+use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButtonResponse;
 
 /**
  * Iteratively exports GridField data to a CSV file on disk, in order to support large exports.
@@ -66,7 +68,7 @@ class GenerateCSVJob extends AbstractQueuedJob
     /**
      * @param GridField $gridField
      */
-    function setGridField(GridField $gridField)
+    public function setGridField(GridField $gridField)
     {
         $this->GridFieldName = $gridField->getName();
         $this->GridFieldURL = $gridField->Link();
@@ -75,7 +77,7 @@ class GenerateCSVJob extends AbstractQueuedJob
     /**
      * @param $session
      */
-    function setSession($session)
+    public function setSession($session)
     {
         // None of the gridfield actions are needed, and they make the stored session bigger, so pull
         // them out.
@@ -91,17 +93,17 @@ class GenerateCSVJob extends AbstractQueuedJob
         $this->Session = $session;
     }
 
-    function setColumns($columns)
+    public function setColumns($columns)
     {
         $this->Columns = $columns;
     }
 
-    function setSeparator($seperator)
+    public function setSeparator($seperator)
     {
         $this->Separator = $seperator;
     }
 
-    function setIncludeHeader($includeHeader)
+    public function setIncludeHeader($includeHeader)
     {
         $this->IncludeHeader = $includeHeader;
     }
@@ -169,7 +171,7 @@ class GenerateCSVJob extends AbstractQueuedJob
         $res = Director::test($url, null, new Session($session), 'GET');
 
         // Great, it did, we can return it
-        if ($res instanceof GridFieldQueuedExportButton_Response) {
+        if ($res instanceof GridFieldQueuedExportButtonResponse) {
             $gridField = $res->getGridField();
             $gridField->getConfig()->removeComponentsByType(GridFieldPaginator::class);
             $gridField->getConfig()->removeComponentsByType(GridFieldPageCount::class);

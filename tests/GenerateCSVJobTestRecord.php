@@ -1,15 +1,12 @@
 <?php
 
-namespace SilverStripe\GridfieldQueuedExport;
-
+namespace SilverStripe\GridFieldQueuedExport\Tests;
 
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\DataObject;
 
-
-
-class GenerateCSVJobTest_Record extends \SilverStripe\ORM\DataObject implements TestOnly
+class GenerateCSVJobTestRecord extends DataObject implements TestOnly
 {
-
     private static $summary_fields = array(
         'Title',
         'Content',

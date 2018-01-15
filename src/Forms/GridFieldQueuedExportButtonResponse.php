@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\GridfieldQueuedExport;
+namespace SilverStripe\GridfieldQueuedExport\Forms;
 
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Control\HTTPResponse;
@@ -9,7 +9,7 @@ use SilverStripe\Control\HTTPResponse;
  * A special type of SS_HTTPResponse that GridFieldQueuedExportButton returns in response to the "findgridfield"
  * action, which includes a reference to the gridfield
  */
-class GridFieldQueuedExportButton_Response extends HTTPResponse
+class GridFieldQueuedExportButtonResponse extends HTTPResponse
 {
     private $gridField;
 

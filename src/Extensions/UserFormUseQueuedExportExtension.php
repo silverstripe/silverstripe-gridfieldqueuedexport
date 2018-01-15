@@ -12,7 +12,7 @@ use SilverStripe\ORM\DataExtension;
  */
 class UserFormUseQueuedExportExtension extends DataExtension
 {
-    function updateCMSFields(FieldList $fields)
+    public function updateCMSFields(FieldList $fields)
     {
         $gridField = $fields->fieldByName('Root.Submissions.Submissions');
 
