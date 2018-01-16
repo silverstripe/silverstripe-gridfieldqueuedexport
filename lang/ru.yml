@@ -1,0 +1,9 @@
+ru:
+  GridFieldQueuedExportButton:
+    AVAILABLE: 'Экспортированные данные готовы.'
+    CANCELLED: 'Задача экспорта отменена'
+    DOWNLOAD_CSV: 'Нажмите для скачивания CSV-файла.'
+    ERROR_GENERAL: 'Извините, произошла ошибка экспорта CSV'
+    EXPORTED_COUNT: 'экспортировано {count} из {total} записей'
+    PREPARING_EXPORT: 'Подготовка к экспорту. Страница автоматически обновиться когда экспортные данные будут готовы.'
+    RETURN: 'Вернуться к {name}'
