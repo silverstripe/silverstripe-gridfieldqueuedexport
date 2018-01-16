@@ -11,6 +11,7 @@ use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_URLHandler;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
@@ -82,12 +83,12 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
     /**
      * This class is an action button
      *
-     * @param $gridField
+     * @param GridField $gridField
      * @return array
      */
     public function getActions($gridField)
     {
-        return array('export', 'findgridfield');
+        return ['export', 'findgridfield'];
     }
 
     /**
@@ -106,7 +107,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
     }
 
     /**
-     * @param $gridField
+     * @param GridField $gridField
      * @return HTTPResponse
      */
     public function startExport($gridField)
@@ -158,9 +159,9 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
     /**
      * Handle the export, for both the action button and the URL
      *
-     * @param $gridField
-     * @param null $request
-     * @return \SilverStripe\Control\HTTPResponse|\SilverStripe\ORM\FieldType\DBHTMLText
+     * @param GridField $gridField
+     * @param HTTPRequest $request
+     * @return HTTPResponse|DBHTMLText
      */
     public function checkExport($gridField, $request = null)
     {
