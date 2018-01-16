@@ -270,8 +270,9 @@ class GenerateCSVJob extends AbstractQueuedJob
     }
 
     /**
-     * Normally Director::handleRequest will register an HTTPRequest service. If that hasn't happened yet, we will
-     * register one instead. Also register a new controller if one hasn't been pushed yet.
+     * Normally Director::handleRequest will register an HTTPRequest service (when routing via frontend controllers).
+     * If that hasn't happened yet, we will register one instead (e.g. for unit testing, or when running from the command
+     * line). Also register a new controller if one hasn't been pushed yet.
      */
     protected function initRequest()
     {

@@ -22,7 +22,7 @@ when more than 1000 records need to be exported. The module should be able to ex
  
  **Note:** For SilverStripe 3.x, please use the [1.x release line](https://github.com/silverstripe/silverstripe-gridfieldqueuedexport/tree/1.0).
 
-## Installation via Composer
+## Installation
 
 To install run `composer require silverstripe/gridfieldqueuedexport`.
 

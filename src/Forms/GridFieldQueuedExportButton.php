@@ -203,7 +203,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
             }
         } elseif ($job->JobStatus == QueuedJob::STATUS_BROKEN) {
             $data->ErrorMessage = _t(
-                'SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.ERROR_GENERAL',
+                __CLASS__.'.ERROR_GENERAL',
                 'Sorry, but there was an error exporting the CSV'
             );
         } elseif ($job->JobStatus == QueuedJob::STATUS_CANCELLED) {
