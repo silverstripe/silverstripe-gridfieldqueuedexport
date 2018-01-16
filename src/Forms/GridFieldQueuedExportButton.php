@@ -215,8 +215,8 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
             $data->Total = $job->TotalSteps;
         }
 
-        Requirements::javascript('gridfieldqueuedexport/client/GridFieldQueuedExportButton.js');
-        Requirements::css('gridfieldqueuedexport/client/GridFieldQueuedExportButton.css');
+        Requirements::javascript('silverstripe/gridfieldqueuedexport:client/GridFieldQueuedExportButton.js');
+        Requirements::css('silverstripe/gridfieldqueuedexport:client/GridFieldQueuedExportButton.css');
 
         $return = $data->renderWith(GridFieldQueuedExportButton::class);
 
@@ -228,8 +228,8 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
     }
 
     /**
-     * @param $gridField
-     * @param null $request
+     * @param GridField $gridField
+     * @param HTTPRequest $request
      * @return HTTPResponse
      */
     public function downloadExport($gridField, $request = null)
@@ -237,7 +237,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         $id = $request->param('ID');
         $job = QueuedJobDescriptor::get()->filter('Signature', $id)->first();
 
-        if ((int)$job->RunAsID !== Security::getCurrentUser()) {
+        if ((int)$job->RunAsID !== Security::getCurrentUser()->ID) {
             return Security::permissionFailure();
         }
 
@@ -252,8 +252,8 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
 
         $response = HTTPRequest::send_file($content, $servedName, 'text/csv');
         $response->addHeader('Set-Cookie', 'downloaded_' . $id . '=true; Path=/');
-
-        return $response;
+        $response->output();
+        exit;
     }
 
     /**

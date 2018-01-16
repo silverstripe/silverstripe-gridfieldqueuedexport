@@ -33,11 +33,6 @@ use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButtonResponse
  */
 class GenerateCSVJob extends AbstractQueuedJob
 {
-    /**
-     * @var array
-     */
-    protected $session;
-
     public function __construct()
     {
         $this->ID = Injector::inst()->create(RandomGenerator::class)->randomToken('sha1');
@@ -82,7 +77,6 @@ class GenerateCSVJob extends AbstractQueuedJob
 
     /**
      * @param array $session
-     * @return $this
      */
     public function setSession($session)
     {
@@ -97,14 +91,7 @@ class GenerateCSVJob extends AbstractQueuedJob
         // This causes problems with logins
         unset($session['HTTP_USER_AGENT']);
 
-        $this->session = $session;
-
-        return $this;
-    }
-
-    public function getSession()
-    {
-        return $this->session;
+        $this->Session = $session;
     }
 
     public function setColumns($columns)
@@ -150,8 +137,10 @@ class GenerateCSVJob extends AbstractQueuedJob
      */
     protected function getGridField()
     {
+        $this->initRequest();
+
         /** @var array $session */
-        $session = $this->getSession();
+        $session = $this->Session;
 
         // Store state in session, and pass ID to client side.
         $state = [
@@ -278,6 +267,26 @@ class GenerateCSVJob extends AbstractQueuedJob
     {
         $gridField = $this->getGridField();
         $this->totalSteps = $gridField->getManipulatedList()->count();
+    }
+
+    /**
+     * Normally Director::handleRequest will register an HTTPRequest service. If that hasn't happened yet, we will
+     * register one instead. Also register a new controller if one hasn't been pushed yet.
+     */
+    protected function initRequest()
+    {
+        if (!Injector::inst()->has(HTTPRequest::class)) {
+            $request = new HTTPRequest('GET', '/');
+            $request->setSession(new Session([]));
+
+            Injector::inst()->registerService($request);
+        }
+
+        if (!Controller::has_curr()) {
+            $controller = new Controller();
+            $controller->setRequest(Injector::inst()->get(HTTPRequest::class));
+            $controller->pushCurrent();
+        }
     }
 
 
