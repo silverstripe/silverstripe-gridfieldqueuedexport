@@ -215,6 +215,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
             $data->Total = $job->TotalSteps;
         }
 
+        Requirements::add_i18n_javascript('silverstripe/gridfieldqueuedexport:client/lang');
         Requirements::javascript('silverstripe/gridfieldqueuedexport:client/GridFieldQueuedExportButton.js');
         Requirements::css('silverstripe/gridfieldqueuedexport:client/GridFieldQueuedExportButton.css');
 

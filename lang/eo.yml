@@ -1,5 +1,5 @@
 eo:
-  GridFieldQueuedExportButton:
+  SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton:
     AVAILABLE: 'Via eksporto estas havebla'
     CANCELLED: 'Ĉi tiu eksporta tasko estas nuligita'
     DOWNLOAD_CSV: 'Alklaku ĉi tie por elŝuti dosieron kiel CSV.'
