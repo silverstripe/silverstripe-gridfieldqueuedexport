@@ -21,7 +21,7 @@ before_script:
 
   - composer validate
   - if [[ $DB == "PGSQL" ]]; then composer require --no-update silverstripe/postgresql 2.0.x-dev; fi
-  - if [[ $DB == "SUBSITES" ]]; then composer require --no-update silverstripe/subsites 2.0.x-dev; fi
+  - if [[ $SUBSITES ]]; then composer require --no-update silverstripe/subsites 2.0.x-dev; fi
   - composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
 
 script:
