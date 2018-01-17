@@ -1,5 +1,5 @@
 ru:
-  GridFieldQueuedExportButton:
+  SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton:
     AVAILABLE: 'Экспортированные данные готовы.'
     CANCELLED: 'Задача экспорта отменена'
     DOWNLOAD_CSV: 'Нажмите для скачивания CSV-файла.'

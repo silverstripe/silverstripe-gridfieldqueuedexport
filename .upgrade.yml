@@ -1,0 +1,8 @@
+mappings:
+  UserFormUseQueuedExportExtension: SilverStripe\GridfieldQueuedExport\Extensions\UserFormUseQueuedExportExtension
+  GenerateCSVJob: SilverStripe\GridfieldQueuedExport\Jobs\GenerateCSVJob
+  GridFieldQueuedExportButton: SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton
+  GridFieldQueuedExportButton_Response: SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButtonResponse
+  GenerateCSVJobTest: SilverStripe\GridFieldQueuedExport\Tests\GenerateCSVJobTest
+  GenerateCSVJobTest_Record: SilverStripe\GridFieldQueuedExport\Tests\GenerateCSVJobTestRecord
+  GenerateCSVJobTest_Controller: SilverStripe\GridFieldQueuedExport\Tests\GenerateCSVJobTestController
