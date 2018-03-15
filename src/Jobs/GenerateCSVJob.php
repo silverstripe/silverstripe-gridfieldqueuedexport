@@ -18,7 +18,6 @@ use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Security\RandomGenerator;
 use Symbiote\QueuedJobs\Services\AbstractQueuedJob;
 use Symbiote\QueuedJobs\Services\QueuedJob;
-
 use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButtonResponse;
 
 /**
@@ -36,6 +35,8 @@ use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButtonResponse
  */
 class GenerateCSVJob extends AbstractQueuedJob
 {
+    private static $chunk_size = 100;
+
     protected $writer;
 
     public function __construct()
@@ -293,6 +294,7 @@ class GenerateCSVJob extends AbstractQueuedJob
 
     public function setup()
     {
+        parent::setup();
         $gridField = $this->getGridField();
         $this->totalSteps = $gridField->getManipulatedList()->count();
     }
@@ -339,9 +341,11 @@ class GenerateCSVJob extends AbstractQueuedJob
             $this->HeadersOutput = true;
         }
 
-        $this->outputRows($gridField, $columns, $this->currentStep, 100);
+        $chunkSize = Config::inst()->get(get_class($this), 'chunk_size');
 
-        $this->currentStep += 100;
+        $this->outputRows($gridField, $columns, $this->currentStep, $chunkSize);
+
+        $this->currentStep += $chunkSize;
 
         if ($this->currentStep >= $this->totalSteps) {
             $this->isComplete = true;
