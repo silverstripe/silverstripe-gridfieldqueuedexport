@@ -2,20 +2,22 @@
 
 namespace SilverStripe\GridfieldQueuedExport\Jobs;
 
+use League\Csv\Writer;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Session;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Security\RandomGenerator;
 use Symbiote\QueuedJobs\Services\AbstractQueuedJob;
 use Symbiote\QueuedJobs\Services\QueuedJob;
-
 use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButtonResponse;
 
 /**
@@ -33,6 +35,10 @@ use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButtonResponse
  */
 class GenerateCSVJob extends AbstractQueuedJob
 {
+    private static $chunk_size = 100;
+
+    protected $writer;
+
     public function __construct()
     {
         $this->ID = Injector::inst()->create(RandomGenerator::class)->randomToken('sha1');
@@ -130,6 +136,35 @@ class GenerateCSVJob extends AbstractQueuedJob
         return $folder . '/' . $this->getSignature() . '.csv';
     }
 
+    /**
+     * @return Writer
+     */
+    protected function getCSVWriter()
+    {
+        if (!$this->writer) {
+            $csvWriter = Writer::createFromPath($this->getOutputPath(), 'w');
+
+            $csvWriter->setDelimiter($this->Seperator);
+            $csvWriter->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
+            $csvWriter->setOutputBOM(Writer::BOM_UTF8);
+
+            if (!Config::inst()->get(GridFieldExportButton::class, 'xls_export_disabled')) {
+                $csvWriter->addFormatter(function (array $row) {
+                    foreach ($row as &$item) {
+                        // [SS-2017-007] Sanitise XLS executable column values with a leading tab
+                        if (preg_match('/^[-@=+].*/', $item)) {
+                            $item = "\t" . $item;
+                        }
+                    }
+                    return $row;
+                });
+            }
+
+            $this->writer = $csvWriter;
+        }
+        return $this->writer;
+    }
+
 
     /**
      * @throws HTTPResponse_Exception
@@ -193,21 +228,20 @@ class GenerateCSVJob extends AbstractQueuedJob
      */
     protected function outputHeader($gridField, $columns)
     {
-        $fileData = '';
-        $separator = $this->Separator;
+        $csvWriter = $this->getCSVWriter();
 
         $headers = [];
 
         // determine the CSV headers. If a field is callable (e.g. anonymous function) then use the
         // source name as the header instead
         foreach ($columns as $columnSource => $columnHeader) {
-            $headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader;
+            if (is_array($columnHeader) && array_key_exists('title', $columnHeader)) {
+                $headers[] = $columnHeader['title'];
+            } else {
+                $headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader;
+            }
         }
-
-        $fileData .= "\"" . implode("\"{$separator}\"", array_values($headers)) . "\"";
-        $fileData .= "\n";
-
-        file_put_contents($this->getOutputPath(), $fileData, FILE_APPEND);
+        $csvWriter->insertOne($headers);
     }
 
     /**
@@ -220,8 +254,7 @@ class GenerateCSVJob extends AbstractQueuedJob
      */
     protected function outputRows(GridField $gridField, $columns, $start, $count)
     {
-        $fileData = '';
-        $separator = $this->Separator;
+        $csvWriter = $this->getCSVWriter();
 
         $items = $gridField->getManipulatedList();
         $items = $items->limit($count, $start);
@@ -247,24 +280,21 @@ class GenerateCSVJob extends AbstractQueuedJob
                         }
                     }
 
-                    $value = str_replace(["\r", "\n"], "\n", $value);
-                    $columnData[] = '"' . str_replace('"', '""', $value) . '"';
+                    $columnData[] = $value;
                 }
 
-                $fileData .= implode($separator, $columnData);
-                $fileData .= "\n";
+                $csvWriter->insertOne($columnData);
             }
 
             if ($item->hasMethod('destroy')) {
                 $item->destroy();
             }
         }
-
-        file_put_contents($this->getOutputPath(), $fileData, FILE_APPEND);
     }
 
     public function setup()
     {
+        parent::setup();
         $gridField = $this->getGridField();
         $this->totalSteps = $gridField->getManipulatedList()->count();
     }
@@ -311,9 +341,11 @@ class GenerateCSVJob extends AbstractQueuedJob
             $this->HeadersOutput = true;
         }
 
-        $this->outputRows($gridField, $columns, $this->currentStep, 100);
+        $chunkSize = Config::inst()->get(get_class($this), 'chunk_size');
 
-        $this->currentStep += 100;
+        $this->outputRows($gridField, $columns, $this->currentStep, $chunkSize);
+
+        $this->currentStep += $chunkSize;
 
         if ($this->currentStep >= $this->totalSteps) {
             $this->isComplete = true;
