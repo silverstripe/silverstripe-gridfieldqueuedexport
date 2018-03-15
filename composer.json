@@ -13,6 +13,7 @@
     "license": "BSD-3-Clause",
     "minimum-stability": "dev",
     "require": {
+        "league/csv": "^8",
         "silverstripe/framework": "^4",
         "symbiote/silverstripe-queuedjobs": "^4"
     },

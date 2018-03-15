@@ -59,15 +59,15 @@ class GenerateCSVJobTest extends SapphireTest
         $this->assertFileExists($path);
 
         // Test that the output matches the expected
-        $expected = <<<EOS
-"Title","Content","Publish On"
-"Record 1","<p>""Record 1"" Body</p>","2015-01-01 23:34:01"
-"Record 2","<p>""Record 2"" Body</p>","2015-01-02 23:34:01"
-"Record 3","<p>""Record 3"" Body</p>","2015-01-03 23:34:01"
-
-EOS;
+        $expected = [
+            'Title,Content,"Publish On"',
+            '"Record 1","<p>""Record 1"" Body</p>","2015-01-01 23:34:01"',
+            '"Record 2","<p>""Record 2"" Body</p>","2015-01-02 23:34:01"',
+            '"Record 3","<p>""Record 3"" Body</p>","2015-01-03 23:34:01"',
+            '',
+        ];
         $actual = file_get_contents($path);
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals(implode("\r\n", $expected), $actual);
     }
 
     /**
