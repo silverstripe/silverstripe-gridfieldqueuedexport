@@ -1,9 +1,11 @@
 en:
+  SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton:
+    ERROR_GENERAL: 'Sorry, but there was an error exporting the CSV'
   SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton:
     AVAILABLE: 'Your export is available.'
     CANCELLED: 'This export job was cancelled'
     DOWNLOAD_CSV: 'Click here to download file as CSV.'
-    ERROR_GENERAL: 'Sorry, but there was an error exporting the CSV'
+    ERROR_REMOVED: 'This export has already been downloaded. For security reasons each export can only be downloaded once.'
     EXPORTED_COUNT: '{count} out of {total} records exported'
     PREPARING_EXPORT: 'Preparing export. This page will automatically refresh when export is available. You can bookmark this page and come back later if you like.'
     RETURN: 'Return to {name}'

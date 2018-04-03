@@ -1,6 +1,6 @@
 eo:
   SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton:
-    AVAILABLE: 'Via eksporto estas havebla'
+    AVAILABLE: 'Via eksportaĵo estas havebla'
     CANCELLED: 'Ĉi tiu eksporta tasko estas nuligita'
     DOWNLOAD_CSV: 'Alklaku ĉi tie por elŝuti dosieron kiel CSV.'
     ERROR_GENERAL: 'Bedaŭrinde, okazis eraro eksportante je la CSV.'

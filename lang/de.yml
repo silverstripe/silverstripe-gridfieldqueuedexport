@@ -1,0 +1,9 @@
+de:
+  SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton:
+    AVAILABLE: 'Ihr Export ist verfügbar.'
+    CANCELLED: 'Der Export wurde abgebrochen.'
+    DOWNLOAD_CSV: 'Klicken Sie hier um die Datei als CSV herunter zu laden.'
+    ERROR_GENERAL: 'Beim Export der CSV Datei ist ein Fehler aufgetreten.'
+    EXPORTED_COUNT: '{count} von {total} Datensätzen exportiert.'
+    PREPARING_EXPORT: 'Export in Vorbereitung. Diese Seite wird automatisch aktualisiert, wenn der Export bereit steht. Wenn gewünscht, können diese Seite zu Ihren Lesezeichen hinzufügen und später wiederkehren.'
+    RETURN: 'Zu {name} zurückkehren'
