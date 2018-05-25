@@ -24,10 +24,7 @@
     "extra": {
         "expose": [
             "client"
-        ],
-        "branch-alias": {
-            "dev-master": "2.x-dev"
-        }
+        ]
     },
     "prefer-stable": true
 }
