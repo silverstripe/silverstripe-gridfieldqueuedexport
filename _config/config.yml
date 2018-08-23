@@ -5,6 +5,6 @@ Only:
 After:
   - 'userforms/*'
 ---
-UserDefinedForm:
+SilverStripe\UserForms\Model\UserDefinedForm:
   extensions:
-    - UserFormUseQueuedExportExtension
+    - SilverStripe\GridfieldQueuedExport\Extensions\UserFormUseQueuedExportExtension
