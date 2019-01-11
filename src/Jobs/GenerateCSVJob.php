@@ -9,16 +9,17 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButtonResponse;
 use SilverStripe\Security\RandomGenerator;
 use Symbiote\QueuedJobs\Services\AbstractQueuedJob;
 use Symbiote\QueuedJobs\Services\QueuedJob;
-use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButtonResponse;
 
 /**
  * Iteratively exports GridField data to a CSV file on disk, in order to support large exports.
@@ -35,6 +36,21 @@ use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButtonResponse
  */
 class GenerateCSVJob extends AbstractQueuedJob
 {
+    use Configurable;
+
+    /**
+     * Optionally define the number of seconds to wait after the job has finished before marking it as complete.
+     * This can help in multi-server environments, where asset synchronisation may not be immediate.
+     *
+     * @config
+     * @var int
+     */
+    private static $sync_sleep_seconds = 0;
+
+    /**
+     * @config
+     * @var int
+     */
     private static $chunk_size = 100;
 
     protected $writer;
@@ -341,13 +357,19 @@ class GenerateCSVJob extends AbstractQueuedJob
             $this->HeadersOutput = true;
         }
 
-        $chunkSize = Config::inst()->get(get_class($this), 'chunk_size');
+        $chunkSize = $this->config()->get('chunk_size');
 
         $this->outputRows($gridField, $columns, $this->currentStep, $chunkSize);
 
         $this->currentStep += $chunkSize;
 
         if ($this->currentStep >= $this->totalSteps) {
+            // Check to see if we need to wait for some time for asset synchronisation to complete
+            $sleepTime = (int) $this->config()->get('sync_sleep_seconds');
+            if ($sleepTime > 0) {
+                sleep($sleepTime);
+            }
+
             $this->isComplete = true;
         }
     }
