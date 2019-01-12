@@ -11,6 +11,7 @@ class GenerateCSVJobTest extends SapphireTest {
         Config::inst()->update('Director', 'rules', array(
             'jobtest//$Action/$ID/$OtherID' => 'GenerateCSVJobTest_Controller'
         ));
+        Config::inst()->update('GenerateCSVJob', 'sync_sleep_seconds', 0);
     }
 
     protected $paths = array();

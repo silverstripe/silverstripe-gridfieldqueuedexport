@@ -15,6 +15,15 @@
  */
 class GenerateCSVJob extends AbstractQueuedJob {
 
+    /**
+     * Optionally define the number of seconds to wait after the job has finished before marking it as complete.
+     * This can help in multi-server environments, where asset synchronisation may not be immediate.
+     *
+     * @config
+     * @var int
+     */
+    private static $sync_sleep_seconds = 0;
+
     public function __construct() {
         $this->ID = Injector::inst()->create('RandomGenerator')->randomToken('sha1');
         $this->Seperator = ',';
@@ -255,6 +264,11 @@ class GenerateCSVJob extends AbstractQueuedJob {
         $this->currentStep += 100;
 
         if ($this->currentStep >= $this->totalSteps) {
+            // Check to see if we need to wait for some time for asset synchronisation to complete
+            $sleepTime = (int) Config::inst()->get('GenerateCSVJob', 'sync_sleep_seconds');
+            if ($sleepTime > 0) {
+                sleep($sleepTime);
+            }
             $this->isComplete = true;
         }
     }
