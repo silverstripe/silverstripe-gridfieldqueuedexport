@@ -22,9 +22,11 @@ class GenerateCSVJobTest extends SapphireTest
     {
         parent::setUp();
 
-        Config::modify()->merge(Director::class, 'rules', [
-            'jobtest//$Action/$ID/$OtherID' => GenerateCSVJobTestController::class
-        ]);
+        Config::modify()
+            ->merge(Director::class, 'rules', [
+                'jobtest//$Action/$ID/$OtherID' => GenerateCSVJobTestController::class
+            ])
+            ->set(GenerateCSVJob::class, 'sync_sleep_seconds', 0);
     }
 
     protected $paths = [];
