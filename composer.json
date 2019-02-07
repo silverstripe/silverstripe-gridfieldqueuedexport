@@ -26,6 +26,11 @@
             "client"
         ]
     },
+    "autoload": {
+        "psr-4": {
+            "SilverStripe\\GridfieldQueuedExport\\": "src/"
+        }
+    },
     "prefer-stable": true
 }
 
