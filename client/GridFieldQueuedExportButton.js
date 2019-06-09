@@ -12,7 +12,9 @@
                 var url = this.parents('.gridfield-queued-export').attr('data-url');
                 if (!url) return;
 
-                $('.cms-content-header-info').append('<span class="gridfield-queued-export__loading"></span>');
+                if ($('.gridfield-queued-export__loading').length < 1) {
+                    $('.cms-content-header-info').append('<span class="icon font-icon-spinner gridfield-queued-export__loading"></span>');
+                }
 
                 var self = this;
                 jQuery.ajax({
