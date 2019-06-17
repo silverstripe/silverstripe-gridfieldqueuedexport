@@ -120,8 +120,15 @@ class GenerateCSVJob extends AbstractQueuedJob
      */
     public function setGridField(GridField $gridField)
     {
+        $gridField->getConfig()->removeComponentsByType(GridFieldPaginator::class);
+        $gridField->getConfig()->removeComponentsByType(GridFieldPageCount::class);
+
         $this->GridFieldName = $gridField->getName();
         $this->GridFieldURL = $gridField->Link();
+        $this->GridFieldState = $gridField->getState()->toArray();
+        $this->totalSteps = $gridField->getManipulatedList()->count();
+
+        return $this;
     }
 
     /**
@@ -141,21 +148,29 @@ class GenerateCSVJob extends AbstractQueuedJob
         unset($session['HTTP_USER_AGENT']);
 
         $this->Session = $session;
+
+        return $this;
     }
 
     public function setColumns($columns)
     {
         $this->Columns = $columns;
+
+        return $this;
     }
 
     public function setSeparator($seperator)
     {
         $this->Separator = $seperator;
+
+        return $this;
     }
 
     public function setIncludeHeader($includeHeader)
     {
         $this->IncludeHeader = $includeHeader;
+
+        return $this;
     }
 
     protected function makeDir($path)
@@ -279,8 +294,12 @@ class GenerateCSVJob extends AbstractQueuedJob
         // Great, it did, we can return it
         if ($res instanceof GridFieldQueuedExportButtonResponse) {
             $gridField = $res->getGridField();
+
             $gridField->getConfig()->removeComponentsByType(GridFieldPaginator::class);
             $gridField->getConfig()->removeComponentsByType(GridFieldPageCount::class);
+
+            $state = $gridField->getState(false);
+            $state->setValue(json_encode($this->GridFieldState));
 
             return $gridField;
         } else {
@@ -362,6 +381,7 @@ class GenerateCSVJob extends AbstractQueuedJob
     {
         parent::setup();
         $gridField = $this->getGridField();
+
         $this->totalSteps = $gridField->getManipulatedList()->count();
     }
 
