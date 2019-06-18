@@ -64,14 +64,15 @@ class GenerateCSVJobTest extends SapphireTest
 
         // Test that the output matches the expected
         $expected = [
-            'Title,Content,"Publish On"',
             '"Record 1","<p>""Record 1"" Body</p>","2015-01-01 23:34:01"',
             '"Record 2","<p>""Record 2"" Body</p>","2015-01-02 23:34:01"',
             '"Record 3","<p>""Record 3"" Body</p>","2015-01-03 23:34:01"',
             '',
         ];
         $actual = file_get_contents($path);
-        $this->assertEquals(implode("\r\n", $expected), $actual);
+        // Note: strtolower() is for case insensitive comparison, since field label casing changed in SS 4.3
+        $this->assertContains('title,content,"publish on"', strtolower($actual));
+        $this->assertContains(implode("\r\n", $expected), $actual);
     }
 
     public function testGenerateExportOverMultipleSteps()
@@ -111,14 +112,15 @@ class GenerateCSVJobTest extends SapphireTest
 
         // Test that the output matches the expected
         $expected = [
-            'Title,Content,"Publish On"',
             '"Record 1","<p>""Record 1"" Body</p>","2015-01-01 23:34:01"',
             '"Record 2","<p>""Record 2"" Body</p>","2015-01-02 23:34:01"',
             '"Record 3","<p>""Record 3"" Body</p>","2015-01-03 23:34:01"',
             '',
         ];
         $actual = file_get_contents($path);
-        $this->assertEquals(implode("\r\n", $expected), $actual);
+        // Note: strtolower() is for case insensitive comparison, since field label casing changed in SS 4.3
+        $this->assertContains('title,content,"publish on"', strtolower($actual));
+        $this->assertContains(implode("\r\n", $expected), $actual);
     }
 
     /**
