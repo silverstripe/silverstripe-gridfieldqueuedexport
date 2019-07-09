@@ -149,13 +149,15 @@ class GenerateCSVJob extends AbstractQueuedJob {
             $gridField->getConfig()->removeComponentsByType('GridFieldPageCount');
 
             $filterParams = $this->FilterParams;
-            foreach ($filterParams as $key => $param) {
-                if ($param == '') {
-                    unset($filterParams[$key]);
+            if (is_array($filterParams)){
+                foreach ($filterParams as $key => $param) {
+                    if ($param == '') {
+                        unset($filterParams[$key]);
+                    }
                 }
+                $list = $gridField->getList();
+                $gridField->setList($list->Filter($filterParams));
             }
-            $list = $gridField->getList();
-            $gridField->setList($list->Filter($filterParams));
             
             return $gridField;
         } else {
