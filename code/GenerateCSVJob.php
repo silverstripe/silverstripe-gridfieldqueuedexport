@@ -47,8 +47,8 @@ class GenerateCSVJob extends AbstractQueuedJob {
      * @param GridField $gridField
      */
     function setGridField(GridField $gridField) {
-        $gridField->getConfig()->removeComponentsByType(GridFieldPaginator::class);
-        $gridField->getConfig()->removeComponentsByType(GridFieldPageCount::class);
+        $gridField->getConfig()->removeComponentsByType('GridFieldPaginator');
+        $gridField->getConfig()->removeComponentsByType('GridFieldPageCount');
         
         $this->GridFieldName = $gridField->getName();
         $this->GridFieldURL = $gridField->Link();
