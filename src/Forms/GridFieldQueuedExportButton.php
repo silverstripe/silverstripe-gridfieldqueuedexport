@@ -5,6 +5,7 @@ namespace SilverStripe\GridfieldQueuedExport\Forms;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
@@ -26,6 +27,7 @@ use SilverStripe\GridfieldQueuedExport\Jobs\GenerateCSVJob;
  */
 class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
+    use Injectable;
 
     /**
      * @var array Map of a property name on the exported objects, with values being the column title in the CSV file.
