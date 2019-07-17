@@ -32,9 +32,9 @@ To install run `composer require silverstripe/gridfieldqueuedexport`.
 Since this component operates on a `GridField`, you can simply use it's `addComponent()` API.
 
 ```php
-$gridField = new GridField('Pages', 'All pages', SiteTree::get())
+$gridField = GridField::create('Pages', 'All pages', SiteTree::get())
 $config = $gridField->getConfig();
-$config->addComponent(new GridFieldQueuedExportButton('buttons-after-left'));
+$config->addComponent(GridFieldQueuedExportButton::create('buttons-after-left'));
 ```
 
 If you want to replace the `GridFieldExportButton` created by the default GridField configuration,
@@ -46,15 +46,15 @@ $gridField = $fields->fieldByName('MyGridField');
 $config = $gridField->getConfig();
 
 // Add new component
-$oldExportButton = $config->getComponentByType('GridFieldExportButton');
-$config->addComponent($newExportButton = new GridFieldQueuedExportButton('buttons-after-left'));
+$oldExportButton = $config->getComponentByType(GridFieldExportButton::class);
+$config->addComponent($newExportButton = GridFieldQueuedExportButton::create('buttons-after-left'));
 
 // Set Header and Export columns on new Export Button
 $newExportButton->setCsvHasHeader($oldExportButton->getCsvHasHeader()); 
 $newExportButton->setExportColumns($oldExportButton->getExportColumns());
 
 // Remove original component
-$config->removeComponentsByType('GridFieldExportButton');
+$config->removeComponentsByType(GridFieldExportButton::class);
 ```
 
 Note: This module is preconfigured to work with the
