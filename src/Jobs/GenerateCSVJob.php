@@ -127,6 +127,7 @@ class GenerateCSVJob extends AbstractQueuedJob
         $this->GridFieldURL = $gridField->Link();
         $this->GridFieldState = $gridField->getState()->toArray();
         $this->totalSteps = $gridField->getManipulatedList()->count();
+        $this->Filters = Controller::curr()->getRequest()->getVar('filters');
 
         return $this;
     }
@@ -280,9 +281,18 @@ class GenerateCSVJob extends AbstractQueuedJob
         $actionKey = 'action_gridFieldAlterAction?' . http_build_query(['StateID' => $id]);
         $actionValue = 'Find Gridfield';
 
+        $queryParams = [$actionKey => $actionValue, 'SecurityID' => $token];
+
+        // Get the filters and assign to the url as a get parameter
+        if (is_array($this->Filters) && count($this->Filters) > 0) {
+            foreach ($this->Filters as $filter => $value) {
+                $queryParams['filters'][$filter] = $value;
+            }
+        }
+
         $url = Controller::join_links(
             $this->GridFieldURL,
-            '?' . http_build_query([$actionKey => $actionValue, 'SecurityID' => $token])
+            '?' . http_build_query($queryParams)
         );
 
         // Restore into the current session the user the job is exporting as
