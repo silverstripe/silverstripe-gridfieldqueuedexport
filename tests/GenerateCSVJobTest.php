@@ -3,6 +3,7 @@
 namespace SilverStripe\GridFieldQueuedExport\Tests;
 
 use SilverStripe\Assets\Filesystem;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
@@ -42,8 +43,8 @@ class GenerateCSVJobTest extends SapphireTest
     public function testGenerateExport()
     {
         // Build session
-        $memberID = $this->logInWithPermission('ADMIN');
-        $session = ['loggedInAs' => $memberID];
+        $this->logInWithPermission('ADMIN');
+        $sessionData = Controller::curr()->getRequest()->getSession()->getAll();
 
         // Build controller
         $controller = new GenerateCSVJobTestController();
@@ -51,7 +52,7 @@ class GenerateCSVJobTest extends SapphireTest
         $gridfield = $form->Fields()->fieldByName('MyGridfield');
 
         // Build job
-        $job = $this->createJob($gridfield, $session);
+        $job = $this->createJob($gridfield, $sessionData);
         $path = sprintf('%1$s/.exports/%2$s/%2$s.csv', ASSETS_PATH, $job->getSignature());
         $this->paths[] = $path; // Mark for cleanup later
 
@@ -80,8 +81,8 @@ class GenerateCSVJobTest extends SapphireTest
         Config::modify()->set(GenerateCSVJob::class, 'chunk_size', 1);
 
         // Build session
-        $memberID = $this->logInWithPermission('ADMIN');
-        $session = ['loggedInAs' => $memberID];
+        $this->logInWithPermission('ADMIN');
+        $sessionData = Controller::curr()->getRequest()->getSession()->getAll();
 
         // Build controller
         $controller = new GenerateCSVJobTestController();
@@ -90,7 +91,7 @@ class GenerateCSVJobTest extends SapphireTest
         $gridfield = $form->Fields()->fieldByName('MyGridfield');
 
         // Build job
-        $job = $this->createJob($gridfield, $session);
+        $job = $this->createJob($gridfield, $sessionData);
         $path = sprintf('%1$s/.exports/%2$s/%2$s.csv', ASSETS_PATH, $job->getSignature());
         $this->paths[] = $path; // Mark for cleanup later
 
