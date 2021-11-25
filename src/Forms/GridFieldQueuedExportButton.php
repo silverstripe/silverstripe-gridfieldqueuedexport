@@ -227,7 +227,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         if ($request->isAjax()) {
             return $return;
         } else {
-            return $controller->customise(['Content' => $return]);
+            return Controller::curr()->customise(['Content' => $return]);
         }
     }
 
