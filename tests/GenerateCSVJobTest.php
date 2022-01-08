@@ -3,6 +3,7 @@
 namespace SilverStripe\GridFieldQueuedExport\Tests;
 
 use SilverStripe\Assets\Filesystem;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
@@ -18,7 +19,7 @@ class GenerateCSVJobTest extends SapphireTest
 
     protected static $extra_controllers = [GenerateCSVJobTestController::class];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -31,7 +32,7 @@ class GenerateCSVJobTest extends SapphireTest
 
     protected $paths = [];
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         foreach ($this->paths as $path) {
             Filesystem::removeFolder(dirname($path));
@@ -42,8 +43,8 @@ class GenerateCSVJobTest extends SapphireTest
     public function testGenerateExport()
     {
         // Build session
-        $memberID = $this->logInWithPermission('ADMIN');
-        $session = ['loggedInAs' => $memberID];
+        $this->logInWithPermission('ADMIN');
+        $sessionData = Controller::curr()->getRequest()->getSession()->getAll();
 
         // Build controller
         $controller = new GenerateCSVJobTestController();
@@ -51,12 +52,12 @@ class GenerateCSVJobTest extends SapphireTest
         $gridfield = $form->Fields()->fieldByName('MyGridfield');
 
         // Build job
-        $job = $this->createJob($gridfield, $session);
+        $job = $this->createJob($gridfield, $sessionData);
         $path = sprintf('%1$s/.exports/%2$s/%2$s.csv', ASSETS_PATH, $job->getSignature());
         $this->paths[] = $path; // Mark for cleanup later
 
         // Test that the job runs
-        $this->assertFileNotExists($path);
+        $this->assertFileDoesNotExist($path);
         $job->setup();
         $job->process();
         $job->afterComplete();
@@ -71,8 +72,8 @@ class GenerateCSVJobTest extends SapphireTest
         ];
         $actual = file_get_contents($path);
         // Note: strtolower() is for case insensitive comparison, since field label casing changed in SS 4.3
-        $this->assertContains('title,content,"publish on"', strtolower($actual));
-        $this->assertContains(implode("\r\n", $expected), $actual);
+        $this->assertStringContainsString('title,content,"publish on"', strtolower($actual));
+        $this->assertStringContainsString(implode("\r\n", $expected), $actual);
     }
 
     public function testGenerateExportOverMultipleSteps()
@@ -80,8 +81,8 @@ class GenerateCSVJobTest extends SapphireTest
         Config::modify()->set(GenerateCSVJob::class, 'chunk_size', 1);
 
         // Build session
-        $memberID = $this->logInWithPermission('ADMIN');
-        $session = ['loggedInAs' => $memberID];
+        $this->logInWithPermission('ADMIN');
+        $sessionData = Controller::curr()->getRequest()->getSession()->getAll();
 
         // Build controller
         $controller = new GenerateCSVJobTestController();
@@ -90,12 +91,12 @@ class GenerateCSVJobTest extends SapphireTest
         $gridfield = $form->Fields()->fieldByName('MyGridfield');
 
         // Build job
-        $job = $this->createJob($gridfield, $session);
+        $job = $this->createJob($gridfield, $sessionData);
         $path = sprintf('%1$s/.exports/%2$s/%2$s.csv', ASSETS_PATH, $job->getSignature());
         $this->paths[] = $path; // Mark for cleanup later
 
         // Test that the job runs
-        $this->assertFileNotExists($path);
+        $this->assertFileDoesNotExist($path);
         $count = 0;
         while (!$job->jobFinished()) {
             ++$count;
@@ -119,8 +120,8 @@ class GenerateCSVJobTest extends SapphireTest
         ];
         $actual = file_get_contents($path);
         // Note: strtolower() is for case insensitive comparison, since field label casing changed in SS 4.3
-        $this->assertContains('title,content,"publish on"', strtolower($actual));
-        $this->assertContains(implode("\r\n", $expected), $actual);
+        $this->assertStringContainsString('title,content,"publish on"', strtolower($actual));
+        $this->assertStringContainsString(implode("\r\n", $expected), $actual);
     }
 
     /**

@@ -1,0 +1,11 @@
+bg:
+  SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton:
+    ERROR_GENERAL: 'За съжаление възникна грешка при извличане на данните към CSV'
+  SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton:
+    AVAILABLE: 'Данните са достъпни.'
+    CANCELLED: 'Извличането на данни беше прекратено.'
+    DOWNLOAD_CSV: 'Кликнете, за да изтеглите CSV файл.'
+    ERROR_REMOVED: 'Тези данни вече бяха изтеглени. От съображения за сигурност данните могат да бъдат свалени само веднъж.'
+    EXPORTED_COUNT: '{count} от {total} записа бяха извлечени'
+    PREPARING_EXPORT: 'Подготовка на данните. Страницата ще се презареди, когато данните са налични. Можете да отметнете тази страница, за да се върнете към нея по-късно.'
+    RETURN: 'Обратно към {name}'
