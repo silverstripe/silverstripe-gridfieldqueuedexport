@@ -12,6 +12,7 @@ use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_URLHandler;
+use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
@@ -227,6 +228,9 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         if ($request->isAjax()) {
             return $return;
         } else {
+            while ($controller && $controller instanceof GridFieldDetailForm_ItemRequest) {
+                $controller = $controller->getController();
+            }
             return $controller->customise(['Content' => $return]);
         }
     }
