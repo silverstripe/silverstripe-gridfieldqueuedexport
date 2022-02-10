@@ -13,7 +13,7 @@
     "license": "BSD-3-Clause",
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "league/csv": "^8 || ^9",
         "silverstripe/framework": "^4.10",
         "symbiote/silverstripe-queuedjobs": "^4"
