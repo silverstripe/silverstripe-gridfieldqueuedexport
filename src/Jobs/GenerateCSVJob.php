@@ -227,7 +227,6 @@ class GenerateCSVJob extends AbstractQueuedJob
             $csvWriter = Writer::createFromPath($this->getOutputPath(), 'a');
 
             $csvWriter->setDelimiter($this->Seperator);
-            $csvWriter->setNewline("");
             $csvWriter->setOutputBOM(Writer::BOM_UTF8);
 
             if (!Config::inst()->get(GridFieldExportButton::class, 'xls_export_disabled')) {
