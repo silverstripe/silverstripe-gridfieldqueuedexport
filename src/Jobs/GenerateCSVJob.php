@@ -139,11 +139,11 @@ class GenerateCSVJob extends AbstractQueuedJob
     {
         // None of the gridfield actions are needed, and they make the stored session bigger, so pull
         // them out.
-        $actionkeys = array_filter(array_keys($session), function ($i) {
-            return strpos($i, 'gf_') === 0;
+        $actionkeys = array_filter(array_keys($session ?? []), function ($i) {
+            return strpos($i ?? '', 'gf_') === 0;
         });
 
-        $session = array_diff_key($session, array_flip($actionkeys));
+        $session = array_diff_key($session ?? [], array_flip($actionkeys ?? []));
 
         // This causes problems with logins
         unset($session['HTTP_USER_AGENT']);
@@ -176,7 +176,7 @@ class GenerateCSVJob extends AbstractQueuedJob
 
     protected function makeDir($path)
     {
-        if (!is_dir($path)) {
+        if (!is_dir($path ?? '')) {
             // whether to use 'chmod' to override 'mkdir' perms which obey umask
             $ignore_umask = $this->config()->get('ignore_umask');
 
@@ -189,14 +189,14 @@ class GenerateCSVJob extends AbstractQueuedJob
             }
 
             // convert from octal to decimal for mkdir
-            $permission_mode = octdec($permission_mode);
+            $permission_mode = octdec($permission_mode ?? '');
 
             // make dir with perms that obey the executing user's umask
-            mkdir($path, $permission_mode, true);
+            mkdir($path ?? '', $permission_mode ?? 0, true);
 
             // override perms to ignore user's umask?
             if ($ignore_umask) {
-                chmod($path, $permission_mode);
+                chmod($path ?? '', $permission_mode ?? 0);
             }
         }
     }
@@ -234,7 +234,7 @@ class GenerateCSVJob extends AbstractQueuedJob
                 $csvWriter->addFormatter(function (array $row) {
                     foreach ($row as &$item) {
                         // [SS-2017-007] Sanitise XLS executable column values with a leading tab
-                        if (preg_match('/^[-@=+].*/', $item)) {
+                        if (preg_match('/^[-@=+].*/', $item ?? '')) {
                             $item = "\t" . $item;
                         }
                     }
@@ -284,7 +284,7 @@ class GenerateCSVJob extends AbstractQueuedJob
         $queryParams = [$actionKey => $actionValue, 'SecurityID' => $token];
 
         // Get the filters and assign to the url as a get parameter
-        if (is_array($this->Filters) && count($this->Filters) > 0) {
+        if (is_array($this->Filters) && count($this->Filters ?? []) > 0) {
             foreach ($this->Filters as $filter => $value) {
                 $queryParams['filters'][$filter] = $value;
             }
@@ -292,7 +292,7 @@ class GenerateCSVJob extends AbstractQueuedJob
 
         $url = Controller::join_links(
             $this->GridFieldURL,
-            '?' . http_build_query($queryParams)
+            '?' . http_build_query($queryParams ?? [])
         );
 
         // Restore into the current session the user the job is exporting as
@@ -330,7 +330,7 @@ class GenerateCSVJob extends AbstractQueuedJob
         // determine the CSV headers. If a field is callable (e.g. anonymous function) then use the
         // source name as the header instead
         foreach ($columns as $columnSource => $columnHeader) {
-            if (is_array($columnHeader) && array_key_exists('title', $columnHeader)) {
+            if (is_array($columnHeader) && array_key_exists('title', $columnHeader ?? [])) {
                 $headers[] = $columnHeader['title'];
             } else {
                 $headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader;
@@ -447,7 +447,7 @@ class GenerateCSVJob extends AbstractQueuedJob
             // Check to see if we need to wait for some time for asset synchronisation to complete
             $sleepTime = (int) $this->config()->get('sync_sleep_seconds');
             if ($sleepTime > 0) {
-                sleep($sleepTime);
+                sleep($sleepTime ?? 0);
             }
 
             $this->isComplete = true;
