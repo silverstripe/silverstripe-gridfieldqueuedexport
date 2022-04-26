@@ -35,7 +35,7 @@ class GenerateCSVJobTest extends SapphireTest
     protected function tearDown(): void
     {
         foreach ($this->paths as $path) {
-            Filesystem::removeFolder(dirname($path));
+            Filesystem::removeFolder(dirname($path ?? ''));
         }
         parent::tearDown();
     }
@@ -70,9 +70,9 @@ class GenerateCSVJobTest extends SapphireTest
             '"Record 3","<p>""Record 3"" Body</p>","2015-01-03 23:34:01"',
             '',
         ];
-        $actual = file_get_contents($path);
+        $actual = file_get_contents($path ?? '');
         // Note: strtolower() is for case insensitive comparison, since field label casing changed in SS 4.3
-        $this->assertStringContainsString('title,content,"publish on"', strtolower($actual));
+        $this->assertStringContainsString('title,content,"publish on"', strtolower($actual ?? ''));
         $this->assertStringContainsString(implode("\r\n", $expected), $actual);
     }
 
@@ -118,9 +118,9 @@ class GenerateCSVJobTest extends SapphireTest
             '"Record 3","<p>""Record 3"" Body</p>","2015-01-03 23:34:01"',
             '',
         ];
-        $actual = file_get_contents($path);
+        $actual = file_get_contents($path ?? '');
         // Note: strtolower() is for case insensitive comparison, since field label casing changed in SS 4.3
-        $this->assertStringContainsString('title,content,"publish on"', strtolower($actual));
+        $this->assertStringContainsString('title,content,"publish on"', strtolower($actual ?? ''));
         $this->assertStringContainsString(implode("\r\n", $expected), $actual);
     }
 

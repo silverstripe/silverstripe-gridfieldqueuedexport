@@ -195,7 +195,7 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         ]);
 
         if ($job->JobStatus == QueuedJob::STATUS_COMPLETE) {
-            if (file_exists($this->getExportPath($id))) {
+            if (file_exists($this->getExportPath($id) ?? '')) {
                 $data->DownloadLink = $gridField->Link('/export_download/' . $job->Signature);
             } else {
                 $data->ErrorMessage = _t(
@@ -253,10 +253,10 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         $servedName = "export-$now.csv";
 
         $path = $this->getExportPath($id);
-        $content = file_get_contents($path);
+        $content = file_get_contents($path ?? '');
 
-        unlink($path);
-        rmdir(dirname($path));
+        unlink($path ?? '');
+        rmdir(dirname($path ?? ''));
 
         $response = HTTPRequest::send_file($content, $servedName, 'text/csv');
         $response->addHeader('Set-Cookie', 'downloaded_' . $id . '=true; Path=/');
