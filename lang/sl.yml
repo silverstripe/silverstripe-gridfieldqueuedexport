@@ -1,0 +1,11 @@
+sl:
+  SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton:
+    ERROR_GENERAL: 'Pri izvozu v CSV je prišlo do napake'
+  SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton:
+    AVAILABLE: 'Izvožena datoteka je na voljo.'
+    CANCELLED: 'Izvoz je bil preklican'
+    DOWNLOAD_CSV: 'Kliknite za izvoz datoteke v formatu CSV.'
+    ERROR_REMOVED: 'Prenos datoteka je že bil opravljen. Iz varnostnih razlogov je mogoče vsako izvoženo datoteko prenesti samo enkrat.'
+    EXPORTED_COUNT: 'Izvoženih {count} od {total} zapisov'
+    PREPARING_EXPORT: 'Datoteka je v pripravi. Stran se bo samodejno osvežila, ko bo datoteka na voljo. Lahko si shranite stran med priljubljene in se vrnete kasneje, saj proces ne bo prekinjen.'
+    RETURN: 'Nazaj na {name}'
