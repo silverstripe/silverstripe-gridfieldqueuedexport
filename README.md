@@ -1,9 +1,7 @@
 # GridField Queued Export
 
 [![CI](https://github.com/silverstripe/silverstripe-gridfieldqueuedexport/actions/workflows/ci.yml/badge.svg)](https://github.com/silverstripe/silverstripe-gridfieldqueuedexport/actions/workflows/ci.yml)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/silverstripe/silverstripe-gridfieldqueuedexport/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/silverstripe/silverstripe-gridfieldqueuedexport/?branch=master)
-[![SilverStripe supported module](https://img.shields.io/badge/silverstripe-supported-0071C4.svg)](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
-[![Code Coverage](https://codecov.io/gh/silverstripe/silverstripe-gridfieldqueuedexport/branch/master/graph/badge.svg)](https://codecov.io/gh/silverstripe/silverstripe-gridfielqueuedexport)
+[![Silverstripe supported module](https://img.shields.io/badge/silverstripe-supported-0071C4.svg)](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
 
 ## Introduction
 
@@ -18,10 +16,10 @@ when more than 1000 records need to be exported. The module should be able to ex
 
 ## Requirements
 
- * SilverStripe 4.0+
+ * Silverstripe 4.0+
  * The [queuedjobs](https://github.com/silverstripe-australia/silverstripe-queuedjobs) module
  
- **Note:** For SilverStripe 3.x, please use the [1.x release line](https://github.com/silverstripe/silverstripe-gridfieldqueuedexport/tree/1.0).
+ **Note:** For Silverstripe 3.x, please use the [1.x release line](https://github.com/silverstripe/silverstripe-gridfieldqueuedexport/tree/1.0).
 
 ## Installation
 
