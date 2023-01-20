@@ -36,7 +36,6 @@ class GenerateCSVJobTestController extends Controller implements TestOnly
         $config->removeComponentsByType(GridFieldExportButton::class);
         $config->addComponent(new GridFieldQueuedExportButton('buttons-after-left'));
         $fields = new GridField('MyGridfield', 'My Records', $records, $config);
-        /** @skipUpgrade */
         return Form::create($this, 'Form', new FieldList($fields), new FieldList());
     }
 }
