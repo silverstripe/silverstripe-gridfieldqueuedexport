@@ -220,8 +220,8 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
         }
 
         Requirements::add_i18n_javascript('silverstripe/gridfieldqueuedexport:client/lang');
-        Requirements::javascript('silverstripe/gridfieldqueuedexport:client/GridFieldQueuedExportButton.js');
-        Requirements::css('silverstripe/gridfieldqueuedexport:client/GridFieldQueuedExportButton.css');
+        Requirements::javascript('silverstripe/gridfieldqueuedexport:client/dist/js/GridFieldQueuedExportButton.js');
+        Requirements::css('silverstripe/gridfieldqueuedexport:client/dist/styles/GridFieldQueuedExportButton.css');
 
         $return = $data->renderWith(GridFieldQueuedExportButton::class);
 
