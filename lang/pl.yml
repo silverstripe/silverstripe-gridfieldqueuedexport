@@ -1,0 +1,11 @@
+pl:
+  SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton:
+    ERROR_GENERAL: 'Przepraszamy, ale wystąpił błąd podczas eksportowania pliku CSV'
+  SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton:
+    AVAILABLE: 'Twój eksport jest dostępny.'
+    CANCELLED: 'To zadanie eksportu zostało anulowane'
+    DOWNLOAD_CSV: 'Kliknij tutaj, aby pobrać plik w formacie CSV.'
+    ERROR_REMOVED: 'Ten eksport został już pobrany. Ze względów bezpieczeństwa każdy eksport może być pobrany tylko raz.'
+    EXPORTED_COUNT: '{count} z {total} wyeksportowanych rekordów'
+    PREPARING_EXPORT: 'Przygotowywanie eksportu. Ta strona zostanie automatycznie odświeżona, gdy eksport będzie dostępny. Możesz dodać tę stronę do zakładek i wrócić do niej później.'
+    RETURN: 'Wróć do {name}'
