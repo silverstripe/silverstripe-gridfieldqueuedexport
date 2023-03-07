@@ -1,0 +1,11 @@
+nl:
+  SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton:
+    ERROR_GENERAL: 'Helaas was er een probleem bij het exporteren van de CSV'
+  SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton:
+    AVAILABLE: 'De export is gereerd.'
+    CANCELLED: 'The export-taak is geannuleerd'
+    DOWNLOAD_CSV: 'Klik hier om het CVS-bestand te downloaden.'
+    ERROR_REMOVED: 'De export is al gedownload. Uit veiligheidsoverwegingen wordt de export na het downloaden verwijderd en is deze dus slechts eenmalig te downloaden.'
+    EXPORTED_COUNT: '{count} van {total} records verwerkt'
+    PREPARING_EXPORT: 'Export aan het voorbereiden. De pagina wordt automatisch ververst als de export gereed is. Je kan de pagina bookmarken en later terugkomen.'
+    RETURN: 'Terug naar {name}'
