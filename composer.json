@@ -15,8 +15,8 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "league/csv": "^8 || ^9",
-        "silverstripe/framework": "4.13.x-dev",
-        "symbiote/silverstripe-queuedjobs": "4.12.x-dev"
+        "silverstripe/framework": "4.13.0-beta1",
+        "symbiote/silverstripe-queuedjobs": "4.12.0-beta1"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
