@@ -14,16 +14,11 @@ As a rough guide, you should consider using this module
 when more than 1000 records need to be exported. The module should be able to export
 10,000 records on a standard server configuration within a few minutes.
 
-## Requirements
-
- * Silverstripe 4.0+
- * The [queuedjobs](https://github.com/silverstripe-australia/silverstripe-queuedjobs) module
- 
- **Note:** For Silverstripe 3.x, please use the [1.x release line](https://github.com/silverstripe/silverstripe-gridfieldqueuedexport/tree/1.0).
-
 ## Installation
 
-To install run `composer require silverstripe/gridfieldqueuedexport`.
+```sh
+composer require silverstripe/gridfieldqueuedexport
+```
 
 ## Configuration
 
