@@ -19,7 +19,7 @@ class GridFieldQueuedExportButtonResponse extends HTTPResponse
     public function __construct(GridField $gridField)
     {
         $this->gridField = $gridField;
-        parent::__construct('', 500);
+        parent::__construct();
     }
 
     public function getGridField()
