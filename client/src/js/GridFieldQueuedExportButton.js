@@ -1,4 +1,5 @@
 /* global jQuery, ss */
+// eslint-disable-next-line func-names
 (function ($) {
   // eslint-disable-next-line no-shadow
   $.entwine('ss', ($) => {
@@ -25,9 +26,9 @@
           success(data, status, xhr) {
             if (!$.contains(document, self[0])) return;
             $('.cms-container').handleAjaxResponse(data, status, xhr);
-          }
+          },
         });
-      }
+      },
     });
 
     $('.gridfield-queued-export__status-available').entwine({
@@ -44,12 +45,12 @@
 
         if (document.cookie.match(new RegExp(`(^|;\\s*)downloaded_${id}\\s*=\\s*true(\\s*;|$)`, 'i'))) {
           this.replaceWith(
-            `<p>${ss.i18n._t('GridFieldQueuedExportButton.DOWNLOADED', 'Your export has been downloaded.')}</p>`
+            `<p>${ss.i18n._t('GridFieldQueuedExportButton.DOWNLOADED', 'Your export has been downloaded.')}</p>`,
           );
         }
 
         setTimeout(() => { self.checkForDownloadStart(); }, 500);
-      }
+      },
     });
   });
 }(jQuery));
