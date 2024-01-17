@@ -2,6 +2,7 @@
 
 namespace SilverStripe\GridfieldQueuedExport\Jobs;
 
+use Exception;
 use League\Csv\Writer;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
