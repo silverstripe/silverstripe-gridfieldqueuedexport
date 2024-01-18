@@ -6,9 +6,12 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\UserForms\Model\UserDefinedForm;
 
 /**
  * Adjusts UserDefinedForm to use GridFieldQueuedExportButton instead of GridFieldExportButton (the default)
+ *
+ * @extends DataExtension<UserDefinedForm>
  */
 class UserFormUseQueuedExportExtension extends DataExtension
 {
