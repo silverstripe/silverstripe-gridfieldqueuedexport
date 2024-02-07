@@ -1,0 +1,11 @@
+sk:
+  SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton:
+    ERROR_GENERAL: 'Ľutujeme, ale pri exportovaní súboru CSV sa vyskytla chyba'
+  SilverStripe\GridfieldQueuedExport\GridFieldQueuedExportButton:
+    AVAILABLE: 'Váš export je k dispozícii.'
+    CANCELLED: 'Táto exportná úloha bola zrušená'
+    DOWNLOAD_CSV: 'Kliknutím sem stiahnete súbor vo formáte CSV.'
+    ERROR_REMOVED: 'Tento export už bol stiahnutý. Z bezpečnostných dôvodov je možné každý export stiahnuť iba raz.'
+    EXPORTED_COUNT: 'Počet exportovaných záznamov: {count} z {total}'
+    PREPARING_EXPORT: 'Príprava exportu. Táto stránka sa automaticky obnoví, keď bude export k dispozícii. Ak chcete, môžete si túto stránku uložiť ako záložku a vrátiť sa neskôr.'
+    RETURN: 'Späť na {name}'
