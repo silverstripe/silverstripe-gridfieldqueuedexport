@@ -15,7 +15,7 @@ use SilverStripe\UserForms\Model\UserDefinedForm;
  */
 class UserFormUseQueuedExportExtension extends DataExtension
 {
-    public function updateCMSFields(FieldList $fields)
+    protected function updateCMSFields(FieldList $fields)
     {
         $gridField = $fields->fieldByName('Root.Submissions.Submissions');
         if (empty($gridField)) {
