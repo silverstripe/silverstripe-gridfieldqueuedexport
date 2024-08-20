@@ -5,15 +5,15 @@ namespace SilverStripe\GridfieldQueuedExport\Extensions;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\GridfieldQueuedExport\Forms\GridFieldQueuedExportButton;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\UserForms\Model\UserDefinedForm;
 
 /**
  * Adjusts UserDefinedForm to use GridFieldQueuedExportButton instead of GridFieldExportButton (the default)
  *
- * @extends DataExtension<UserDefinedForm>
+ * @extends Extension<UserDefinedForm>
  */
-class UserFormUseQueuedExportExtension extends DataExtension
+class UserFormUseQueuedExportExtension extends Extension
 {
     protected function updateCMSFields(FieldList $fields)
     {
