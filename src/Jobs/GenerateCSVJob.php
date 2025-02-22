@@ -410,7 +410,7 @@ class GenerateCSVJob extends AbstractQueuedJob
             Injector::inst()->registerService($request);
         }
 
-        if (!Controller::has_curr()) {
+        if (!Controller::curr()) {
             $controller = new Controller();
             $controller->setRequest(Injector::inst()->get(HTTPRequest::class));
             $controller->pushCurrent();
