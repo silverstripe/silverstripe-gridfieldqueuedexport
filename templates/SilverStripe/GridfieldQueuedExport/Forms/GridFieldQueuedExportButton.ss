@@ -23,7 +23,10 @@
            </p>
            <p><%t SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.EXPORTED_COUNT '{count} out of {total} records exported' count=$Count total=$Total %></p>
         <% end_if %>
-        <p><a href="$Backlink.ATT" class="btn btn-outline-secondary font-icon-angle-left"}><%t SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.RETURN 'Return to {name}' name=$GridName %></a></p>
+        <p><a href="$Backlink.ATT" class="btn btn-outline-secondary"}>
+            <span class="font-icon-angle-left" aria-hidden="true"></span>
+            <%t SilverStripe\\GridfieldQueuedExport\\GridFieldQueuedExportButton.RETURN 'Return to {name}' name=$GridName %>
+        </a></p>
     </div>
 
 </div>
