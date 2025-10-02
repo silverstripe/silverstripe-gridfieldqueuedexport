@@ -1,3 +1,4 @@
 {
-    "GridFieldQueuedExportButton.DOWNLOADED": "Your export has been downloaded."
+    "GridFieldQueuedExportButton.DOWNLOADED": "Your export has been downloaded.",
+    "GridFieldQueuedExportButton.LOADING": "Loading..."
 }

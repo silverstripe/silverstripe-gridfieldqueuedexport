@@ -1,4 +1,4 @@
-/* global jQuery, ss */
+/* global i18n, jQuery, ss */
 (function ($) {
   // eslint-disable-next-line no-shadow
   $.entwine('ss', ($) => {
@@ -14,7 +14,8 @@
         if (!url) return;
 
         if ($('.gridfield-queued-export__loading').length < 1) {
-          $('.cms-content-header-info').append('<span class="icon font-icon-spinner gridfield-queued-export__loading"></span>');
+          const loadingText = i18n._t('GridFieldQueuedExportButton.LOADING', 'Loading...');
+          $('.cms-content-header-info').append(`<span class="icon font-icon-spinner gridfield-queued-export__loading" aria-label="${loadingText}"></span>`);
         }
 
         const self = this;
