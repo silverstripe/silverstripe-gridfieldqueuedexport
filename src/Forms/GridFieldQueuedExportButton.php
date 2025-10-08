@@ -73,8 +73,8 @@ class GridFieldQueuedExportButton implements GridField_HTMLProvider, GridField_A
             'export',
             null
         );
-        $button->setAttribute('data-icon', 'download-csv');
-        $button->addExtraClass('btn btn-secondary no-ajax font-icon-down-circled action_export action_batch_export');
+        $button->setIcon('down-circled');
+        $button->addExtraClass('btn btn-secondary no-ajax action_export action_batch_export');
         $button->setForm($gridField->getForm());
 
         return [
