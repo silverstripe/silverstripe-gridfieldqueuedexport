@@ -7,6 +7,6 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
 } else {
   ss.i18n.addDictionary('en', {
     "GridFieldQueuedExportButton.DOWNLOADED": "Your export has been downloaded.",
-    "GridFieldQueuedExportButton.LOADING": "Loading...",
+    "GridFieldQueuedExportButton.LOADING": "Loading..."
 });
 }
