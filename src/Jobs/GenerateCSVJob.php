@@ -3,6 +3,7 @@
 namespace SilverStripe\GridfieldQueuedExport\Jobs;
 
 use Exception;
+use League\Csv\Bom;
 use League\Csv\Writer;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -225,11 +226,12 @@ class GenerateCSVJob extends AbstractQueuedJob
     protected function getCSVWriter()
     {
         if (!$this->writer) {
-            $csvWriter = Writer::createFromPath($this->getOutputPath(), 'w');
+            $csvWriter = Writer::from($this->getOutputPath(), 'w');
 
             $csvWriter->setDelimiter($this->Seperator);
-            $csvWriter->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
-            $csvWriter->setOutputBOM(Writer::BOM_UTF8);
+            //use windows line endings for compatibility with some csv libraries
+            $csvWriter->setEndOfLine("\r\n");
+            $csvWriter->setOutputBOM(Bom::Utf8);
 
             if (!Config::inst()->get(GridFieldExportButton::class, 'xls_export_disabled')) {
                 $csvWriter->addFormatter(function (array $row) {
